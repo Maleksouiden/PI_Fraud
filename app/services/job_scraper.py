@@ -214,7 +214,7 @@ def scrape_indeed_jobs(query='', location=''):
         'q': query,
         'l': location if location else 'France',
         'sort': 'date',  # Trier par date pour avoir les offres les plus récentes
-        'fromage': '14'  # Offres des 14 derniers jours
+        'fromage': '1'  # Offres des dernières 24 heures
     }
 
     url = f"{base_url}?{'&'.join([f'{k}={urllib.parse.quote(str(v))}' for k, v in params.items()])}"
@@ -273,7 +273,12 @@ def scrape_indeed_jobs(query='', location=''):
                 if not company_element:
                     company_element = card.select_one('div[data-testid="company-name"]') or card.select_one('span[data-testid="company-name"]')
 
+                # Essayer d'autres sélecteurs si les précédents ne fonctionnent pas
+                if not company_element:
+                    company_element = card.select_one('.company-name') or card.select_one('.companyInfo')
+
                 company_name = company_element.get_text(strip=True) if company_element else "Entreprise non spécifiée"
+                company_name = clean_company_name(company_name)
 
                 # Extraire le lieu
                 location_element = card.select_one('div.companyLocation') or card.select_one('div[data-testid="text-location"]')
@@ -310,11 +315,16 @@ def scrape_indeed_jobs(query='', location=''):
                 # Extraire les compétences à partir de la description
                 skills = extract_skills_from_description(description)
 
+                # Nettoyer le nom de l'entreprise pour le logo
+                clean_company_for_logo = company_name.lower().replace(' ', '').replace(',', '').replace('.', '')
+                if len(clean_company_for_logo) < 3:
+                    clean_company_for_logo = "company"  # Fallback pour les noms trop courts
+
                 # Créer l'objet d'offre d'emploi
                 job = {
                     'title': title,
                     'company_name': company_name,
-                    'company_logo': f"https://logo.clearbit.com/{company_name.lower().replace(' ', '').replace(',', '').replace('.', '')}.com",
+                    'company_logo': f"https://logo.clearbit.com/{clean_company_for_logo}.com",
                     'description': description,
                     'location': location_val,
                     'salary': salary,
@@ -371,7 +381,7 @@ def save_job_to_db(job_data):
         existing_job.experience_required = job_data['experience_required']
         existing_job.benefits = job_data['benefits']
         existing_job.application_link = job_data['application_link']
-        existing_job.scraped_date = datetime.now(timezone.utc)
+        existing_job.scraped_date = datetime.now(timezone.utc).replace(year=2023)
 
         # Mise à jour des informations de fraude (si les colonnes existent)
         try:
@@ -407,8 +417,8 @@ def save_job_to_db(job_data):
             benefits=job_data['benefits'],
             application_link=job_data['application_link'],
             source_url=job_data['source_url'],
-            posted_date=datetime.now(timezone.utc),  # Dans une application réelle, on extrairait cette date du site
-            scraped_date=datetime.now(timezone.utc)
+            posted_date=datetime.now(timezone.utc).replace(year=2023),  # Utiliser l'année 2023 pour éviter les dates futures
+            scraped_date=datetime.now(timezone.utc).replace(year=2023)
         )
 
         # Définir les informations de fraude (si les colonnes existent)
@@ -585,7 +595,10 @@ def scrape_pole_emploi_jobs(query='', location=''):
         'lieux': location if location else 'FRANCE',
         'offresPartenaires': 'true',
         'rayon': '10',  # Rayon de recherche en km
-        'tri': '0'  # Tri par pertinence
+        'tri': '1',  # Tri par date
+        'typeContrat': '',  # Tous types de contrats
+        'qualification': '',  # Toutes qualifications
+        'periodeEmission': '1'  # Offres des dernières 24 heures
     }
 
     url = f"{base_url}?{'&'.join([f'{k}={urllib.parse.quote(str(v))}' for k, v in params.items()])}"
@@ -726,7 +739,7 @@ def scrape_linkedin_jobs(query='', location=''):
     params = {
         'keywords': query,
         'location': location if location else 'France',
-        'f_TPR': 'r2592000',  # Offres des 30 derniers jours
+        'f_TPR': 'r86400',  # Offres des dernières 24 heures
         'position': '1',
         'pageNum': '0'
     }
@@ -871,7 +884,8 @@ def scrape_monster_jobs(query='', location=''):
     params = {
         'q': query,
         'where': location if location else 'France',
-        'page': '1'
+        'page': '1',
+        'recency': '1'  # Offres des dernières 24 heures
     }
 
     url = f"{base_url}?{'&'.join([f'{k}={urllib.parse.quote(str(v))}' for k, v in params.items()])}"

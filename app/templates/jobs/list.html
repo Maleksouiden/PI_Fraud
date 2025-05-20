@@ -102,9 +102,9 @@
                 <hr>
 
                 <div class="d-grid gap-2">
-                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#searchModal">
+                    <a href="#" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#scrapeModal">
                         <i class="fas fa-globe me-2"></i>Scraper de nouvelles offres
-                    </button>
+                    </a>
 
                     <a href="{{ url_for('jobs.refresh_jobs', query=query, location=location) }}" class="btn btn-outline-primary">
                         <i class="fas fa-sync-alt me-2"></i>Actualiser les offres
@@ -115,46 +115,6 @@
                         <i class="fas fa-bullseye me-2"></i>Offres recommandées
                     </a>
                     {% endif %}
-                </div>
-
-                <!-- Modal de recherche spécifique -->
-                <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header bg-primary text-white">
-                                <h5 class="modal-title" id="searchModalLabel"><i class="fas fa-globe me-2"></i>Scraper des offres d'emploi réelles</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1) grayscale(100%) brightness(200%);"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="alert alert-info mb-3">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <strong>Scraping en temps réel :</strong> Les offres seront récupérées depuis LinkedIn, Indeed, Monster et Pôle Emploi. Seules les offres avec des liens valides seront affichées.
-                                </div>
-                                <form action="{{ url_for('jobs.refresh_jobs') }}" method="GET">
-                                    <div class="mb-3">
-                                        <label for="modal_query" class="form-label">Poste recherché</label>
-                                        <input type="text" class="form-control" id="modal_query" name="query" placeholder="Ex: développeur python, data scientist..." required>
-                                        <div class="form-text">Soyez précis pour obtenir des résultats pertinents</div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="modal_location" class="form-label">Lieu</label>
-                                        <input type="text" class="form-control" id="modal_location" name="location" placeholder="Ex: Paris, Lyon, Marseille..." required>
-                                        <div class="form-text">Ville, région ou pays</div>
-                                    </div>
-                                    <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-globe me-2"></i>Scraper des offres en ligne
-                                        </button>
-                                    </div>
-                                </form>
-                                <div class="mt-3 text-center">
-                                    <small class="text-muted">
-                                        <i class="fas fa-bolt me-1"></i>Cette opération peut prendre quelques instants
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -289,11 +249,7 @@
                                 {% endif %}
                             </div>
                             <div class="small text-muted">
-                                {% if job.posted_date %}
-                                    Publié le {{ job.posted_date.strftime('%d/%m/%Y') }}
-                                {% elif job.scraped_date %}
-                                    Ajouté le {{ job.scraped_date.strftime('%d/%m/%Y') }}
-                                {% endif %}
+                                Publié le {{ job.formatted_posted_date }}
                             </div>
                         </div>
                     </div>
@@ -308,3 +264,46 @@
     </div>
 </div>
 {% endblock %}
+
+<!-- Modal de scraping -->
+<div class="modal fade" id="scrapeModal" tabindex="-1" aria-labelledby="scrapeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="scrapeModalLabel"><i class="fas fa-globe me-2"></i>Scraper des offres d'emploi réelles</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1) grayscale(100%) brightness(200%);"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info mb-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Scraping en temps réel :</strong> Les offres seront récupérées depuis LinkedIn, Indeed, Monster et Pôle Emploi. Seules les offres avec des liens valides seront affichées.
+                </div>
+                <form action="{{ url_for('jobs.refresh_jobs') }}" method="GET">
+                    <div class="mb-3">
+                        <label for="modal_query" class="form-label">Poste recherché</label>
+                        <input type="text" class="form-control" id="modal_query" name="query" placeholder="Ex: développeur python, data scientist..." required>
+                        <div class="form-text">Soyez précis pour obtenir des résultats pertinents</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal_location" class="form-label">Lieu</label>
+                        <input type="text" class="form-control" id="modal_location" name="location" placeholder="Ex: Paris, Lyon, Marseille..." required>
+                        <div class="form-text">Ville, région ou pays</div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-globe me-2"></i>Scraper des offres en ligne
+                        </button>
+                    </div>
+                </form>
+                <div class="mt-3 text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-bolt me-1"></i>Cette opération peut prendre quelques instants
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>

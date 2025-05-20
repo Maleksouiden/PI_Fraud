@@ -36,14 +36,32 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize modals
   var modals = document.querySelectorAll(".modal");
   modals.forEach(function (modalEl) {
-    var modal = new bootstrap.Modal(modalEl);
+    var modal = new bootstrap.Modal(modalEl, {
+      backdrop: true,
+      keyboard: true,
+      focus: true,
+    });
+
+    // Fix for modal issues
+    modalEl.addEventListener("shown.bs.modal", function () {
+      document.body.classList.add("modal-open");
+      modalEl.style.display = "block";
+      modalEl.style.paddingRight = "0px";
+    });
+
+    modalEl.addEventListener("hidden.bs.modal", function () {
+      document.body.classList.remove("modal-open");
+      document.body.style.paddingRight = "0px";
+      modalEl.style.display = "none";
+    });
 
     // Add event listener to show modal when button is clicked
     var modalTrigger = document.querySelector(
       `[data-bs-target="#${modalEl.id}"]`
     );
     if (modalTrigger) {
-      modalTrigger.addEventListener("click", function () {
+      modalTrigger.addEventListener("click", function (e) {
+        e.preventDefault();
         modal.show();
       });
     }

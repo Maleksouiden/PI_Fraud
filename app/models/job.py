@@ -35,6 +35,26 @@ class Job(db.Model):
     posted_date = db.Column(db.DateTime, default=datetime.utcnow)
     scraped_date = db.Column(db.DateTime, default=datetime.utcnow)
 
+    @property
+    def formatted_posted_date(self):
+        """Retourne la date de publication formatée correctement"""
+        if self.posted_date:
+            # Utiliser la date actuelle pour l'année si l'année est dans le futur
+            current_year = datetime.utcnow().year
+            date_to_use = self.posted_date
+            if date_to_use.year > current_year:
+                # Créer une nouvelle date avec l'année actuelle
+                date_to_use = date_to_use.replace(year=current_year)
+            return date_to_use.strftime('%d/%m/%Y')
+        elif self.scraped_date:
+            # Même logique pour la date de scraping
+            current_year = datetime.utcnow().year
+            date_to_use = self.scraped_date
+            if date_to_use.year > current_year:
+                date_to_use = date_to_use.replace(year=current_year)
+            return date_to_use.strftime('%d/%m/%Y')
+        return "Date inconnue"
+
     # Détection de fraude
     # Utiliser nullable=True pour que les colonnes soient optionnelles
     fraud_probability = db.Column(db.Float, default=0.0, nullable=True)

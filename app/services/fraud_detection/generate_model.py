@@ -17,34 +17,140 @@ def generate_basic_model():
     """
     Génère un modèle de base pour la détection de fraude.
     """
-    # Créer un petit ensemble de données fictif pour l'entraînement
+    # Créer un ensemble de données fictif plus varié pour l'entraînement
     data = {
-        'title': ['Développeur Python', 'Data Scientist', 'Ingénieur DevOps', 'Assistant Manager'],
-        'location': ['Paris, France', 'Lyon, France', 'Marseille, France', 'Toulouse, France'],
-        'department': ['IT', 'Data', 'IT', 'Management'],
-        'company_profile': ['Entreprise de logiciels', 'Startup data', 'Grande entreprise', 'Petite entreprise'],
+        'title': [
+            'Développeur Python',
+            'Data Scientist',
+            'Ingénieur DevOps',
+            'Assistant Manager',
+            'Développeur Full Stack',
+            'Ingénieur Logiciel',
+            'Administrateur Système',
+            'Responsable Marketing Digital',
+            'Travail à domicile - Gains rapides',
+            'Opportunité exceptionnelle - Revenus illimités'
+        ],
+        'location': [
+            'Paris, France',
+            'Lyon, France',
+            'Marseille, France',
+            'Toulouse, France',
+            'Bordeaux, France',
+            'Lille, France',
+            'Nantes, France',
+            'Strasbourg, France',
+            'Travail à distance',
+            'Partout en France'
+        ],
+        'department': [
+            'IT',
+            'Data',
+            'IT',
+            'Management',
+            'Développement',
+            'Ingénierie',
+            'Infrastructure',
+            'Marketing',
+            'Non spécifié',
+            'Tous départements'
+        ],
+        'company_profile': [
+            'Entreprise de logiciels',
+            'Startup data',
+            'Grande entreprise',
+            'Petite entreprise',
+            'Agence web',
+            'Éditeur de logiciels',
+            'ESN',
+            'Agence marketing',
+            '',
+            'Entreprise internationale'
+        ],
         'description': [
             'Nous recherchons un développeur Python expérimenté pour rejoindre notre équipe.',
             'Poste de data scientist pour analyser des données et créer des modèles.',
             'Ingénieur DevOps pour gérer notre infrastructure cloud.',
-            'Assistant manager pour aider à la gestion quotidienne.'
+            'Assistant manager pour aider à la gestion quotidienne.',
+            'Développeur Full Stack pour travailler sur nos applications web et mobiles.',
+            'Ingénieur logiciel pour concevoir et développer nos produits.',
+            'Administrateur système pour gérer notre infrastructure IT.',
+            'Responsable marketing digital pour développer notre présence en ligne.',
+            'Travaillez depuis chez vous et gagnez jusqu\'à 5000€ par semaine sans expérience requise!',
+            'Opportunité unique! Revenus illimités, formation offerte, contactez-nous rapidement!'
         ],
         'requirements': [
             'Python, Django, Flask',
             'Python, R, Machine Learning',
             'Docker, Kubernetes, AWS',
-            'Excel, Word, Communication'
+            'Excel, Word, Communication',
+            'JavaScript, React, Node.js',
+            'Java, Spring, Hibernate',
+            'Linux, Windows Server, Networking',
+            'SEO, SEM, Google Analytics',
+            'Aucune expérience requise',
+            'Motivation et détermination'
         ],
         'benefits': [
             'Tickets restaurant, Mutuelle',
             'Télétravail, Formation',
             'RTT, Participation',
-            'Horaires flexibles'
+            'Horaires flexibles',
+            'Prime annuelle, CE',
+            'Intéressement, PEE',
+            'Assurance santé, Retraite',
+            'Formation continue, Évènements',
+            'Revenus exceptionnels',
+            'Liberté financière'
         ],
-        'employment_type': ['CDI', 'CDI', 'CDD', 'CDI'],
-        'required_experience': ['3-5 ans', '2-3 ans', '5-7 ans', '1-2 ans'],
-        'required_education': ["Bac+5", "Bac+5", "Bac+3", "Bac+2"],
-        'fraudulent': [0, 0, 0, 1]  # Le dernier est marqué comme frauduleux pour l'exemple
+        'employment_type': [
+            'CDI',
+            'CDI',
+            'CDD',
+            'CDI',
+            'CDI',
+            'CDI',
+            'CDI',
+            'CDI',
+            'Indépendant',
+            'Freelance'
+        ],
+        'required_experience': [
+            '3-5 ans',
+            '2-3 ans',
+            '5-7 ans',
+            '1-2 ans',
+            '3-5 ans',
+            '5+ ans',
+            '3-5 ans',
+            '2-4 ans',
+            'Aucune',
+            'Tous niveaux'
+        ],
+        'required_education': [
+            "Bac+5",
+            "Bac+5",
+            "Bac+3",
+            "Bac+2",
+            "Bac+5",
+            "Bac+5",
+            "Bac+3",
+            "Bac+3",
+            "Aucun diplôme requis",
+            "Peu importe"
+        ],
+        'fraudulent': [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,  # Offre frauduleuse
+            1   # Offre frauduleuse
+        ]
     }
 
     df = pd.DataFrame(data)

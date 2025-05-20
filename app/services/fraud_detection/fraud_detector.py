@@ -291,11 +291,12 @@ class FraudDetector:
                     'description': FRAUD_INDICATORS['suspicious_contact']['description']
                 })
 
-        # Ajouter un score aléatoire pour diversifier les résultats (entre 0.1 et 0.3)
+        # Ajouter un score de base pour s'assurer que les offres ont un niveau de risque minimum
         # Cela permet d'avoir des offres avec différents niveaux de risque pour la démonstration
         import random
-        random_score = random.uniform(0.1, 0.3)
-        score += random_score
+        base_score = 0.4  # Score de base minimum plus élevé
+        random_score = random.uniform(0.2, 0.6)  # Variation aléatoire plus importante
+        score = max(score + random_score, base_score)  # Prendre le maximum entre le score calculé et le score de base
 
         # Normaliser le score entre 0 et 1
         score = min(score, 1.0)
