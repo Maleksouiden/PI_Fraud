@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier mon profil - JobMatch{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-edit me-2"></i>Modifier mon profil professionnel</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('profile.edit_profile') }}" enctype="multipart/form-data">
+                    <h5 class="border-bottom pb-2 mb-3">Informations personnelles</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label">Prénom *</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ profile.first_name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label">Nom *</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ profile.last_name }}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Téléphone</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" value="{{ profile.phone or '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="address" class="form-label">Adresse</label>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ profile.address or '' }}">
+                        </div>
+                    </div>
+                    
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Informations professionnelles</h5>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Titre professionnel</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ profile.title or '' }}" placeholder="Ex: Développeur Web, Data Scientist...">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="years_experience" class="form-label">Années d'expérience</label>
+                            <input type="number" class="form-control" id="years_experience" name="years_experience" value="{{ profile.years_experience or 0 }}" min="0">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="education_level" class="form-label">Niveau d'études</label>
+                            <select class="form-select" id="education_level" name="education_level">
+                                <option value="">Sélectionner...</option>
+                                <option value="Bac" {% if profile.education_level == 'Bac' %}selected{% endif %}>Bac</option>
+                                <option value="Bac+2" {% if profile.education_level == 'Bac+2' %}selected{% endif %}>Bac+2</option>
+                                <option value="Bac+3" {% if profile.education_level == 'Bac+3' %}selected{% endif %}>Bac+3</option>
+                                <option value="Bac+5" {% if profile.education_level == 'Bac+5' %}selected{% endif %}>Bac+5</option>
+                                <option value="Bac+8" {% if profile.education_level == 'Bac+8' %}selected{% endif %}>Bac+8</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="skills" class="form-label">Compétences</label>
+                        <input type="text" class="form-control" id="skills" name="skills" value="{{ skills }}" placeholder="Séparez les compétences par des virgules">
+                        <div class="form-text">Ex: Python, JavaScript, SQL, Machine Learning, Communication</div>
+                    </div>
+                    
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Préférences d'emploi</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="desired_salary" class="form-label">Salaire souhaité (€/an)</label>
+                            <input type="number" class="form-control" id="desired_salary" name="desired_salary" value="{{ profile.desired_salary or '' }}" min="0">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="desired_location" class="form-label">Lieu souhaité</label>
+                            <input type="text" class="form-control" id="desired_location" name="desired_location" value="{{ profile.desired_location or '' }}" placeholder="Ex: Paris, Lyon...">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="work_type" class="form-label">Type de travail préféré</label>
+                        <select class="form-select" id="work_type" name="work_type">
+                            <option value="">Sélectionner...</option>
+                            <option value="Présentiel" {% if profile.work_type == 'Présentiel' %}selected{% endif %}>Présentiel</option>
+                            <option value="Télétravail" {% if profile.work_type == 'Télétravail' %}selected{% endif %}>Télétravail</option>
+                            <option value="Mixte" {% if profile.work_type == 'Mixte' %}selected{% endif %}>Mixte</option>
+                        </select>
+                    </div>
+                    
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Documents</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="resume" class="form-label">CV (PDF, DOC, DOCX)</label>
+                            <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx">
+                            {% if profile.resume_path %}
+                            <div class="form-text">CV actuel: {{ profile.resume_path.split('/')[-1] }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="photo" class="form-label">Photo de profil (JPG, PNG)</label>
+                            <input type="file" class="form-control" id="photo" name="photo" accept=".jpg,.jpeg,.png">
+                            {% if profile.photo_path %}
+                            <div class="form-text">Photo actuelle: {{ profile.photo_path.split('/')[-1] }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary">Mettre à jour mon profil</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

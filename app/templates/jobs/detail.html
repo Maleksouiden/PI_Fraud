@@ -1,0 +1,367 @@
+{% extends "base.html" %} {% block title %}{{ job.title }} - JobMatch{% endblock
+%} {% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-4">
+          {% if job.company_logo %}
+          <img
+            src="{{ job.company_logo }}"
+            alt="{{ job.company_name }}"
+            class="me-3"
+            style="max-height: 80px"
+            onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Yzc1N2QiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWJ1aWxkaW5nIj48cmVjdCB4PSI0IiB5PSIyIiB3aWR0aD0iMTYiIGhlaWdodD0iMjAiIHJ4PSIyIiByeT0iMiI+PC9yZWN0Pjxwb2x5bGluZSBwb2ludHM9IjkgMjIgOSAxMiAxNSAxMiAxNSAyMiI+PC9wb2x5bGluZT48bGluZSB4MT0iOCIgeTE9IjYiIHgyPSIxNiIgeTI9IjYiPjwvbGluZT48bGluZSB4MT0iOCIgeTE9IjEwIiB4Mj0iMTYiIHkyPSIxMCI+PC9saW5lPjwvc3ZnPg==';"
+          />
+          {% else %}
+          <div
+            class="bg-light rounded d-flex align-items-center justify-content-center me-3"
+            style="width: 80px; height: 80px"
+          >
+            <i class="fas fa-building fa-3x text-secondary"></i>
+          </div>
+          {% endif %}
+          <div>
+            <h2 class="mb-1">{{ job.title }}</h2>
+            <h5 class="text-muted">{{ job.company_name }}</h5>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <div class="row">
+            {% if job.location %}
+            <div class="col-md-4 mb-2">
+              <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle p-2 me-2">
+                  <i class="fas fa-map-marker-alt text-primary"></i>
+                </div>
+                <div>
+                  <div class="small text-muted">Lieu</div>
+                  <div>{{ job.location }}</div>
+                </div>
+              </div>
+            </div>
+            {% endif %} {% if job.work_type %}
+            <div class="col-md-4 mb-2">
+              <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle p-2 me-2">
+                  <i class="fas fa-laptop-house text-primary"></i>
+                </div>
+                <div>
+                  <div class="small text-muted">Type de travail</div>
+                  <div>{{ job.work_type }}</div>
+                </div>
+              </div>
+            </div>
+            {% endif %} {% if job.salary %}
+            <div class="col-md-4 mb-2">
+              <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle p-2 me-2">
+                  <i class="fas fa-euro-sign text-primary"></i>
+                </div>
+                <div>
+                  <div class="small text-muted">Salaire</div>
+                  <div>{{ job.salary }} €/an</div>
+                </div>
+              </div>
+            </div>
+            {% endif %} {% if job.education_required %}
+            <div class="col-md-4 mb-2">
+              <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle p-2 me-2">
+                  <i class="fas fa-graduation-cap text-primary"></i>
+                </div>
+                <div>
+                  <div class="small text-muted">Niveau d'études</div>
+                  <div>{{ job.education_required }}</div>
+                </div>
+              </div>
+            </div>
+            {% endif %} {% if job.experience_required is not none %}
+            <div class="col-md-4 mb-2">
+              <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle p-2 me-2">
+                  <i class="fas fa-history text-primary"></i>
+                </div>
+                <div>
+                  <div class="small text-muted">Expérience requise</div>
+                  <div>{{ job.experience_required }} an(s)</div>
+                </div>
+              </div>
+            </div>
+            {% endif %} {% if job.posted_date %}
+            <div class="col-md-4 mb-2">
+              <div class="d-flex align-items-center">
+                <div class="bg-light rounded-circle p-2 me-2">
+                  <i class="fas fa-calendar-alt text-primary"></i>
+                </div>
+                <div>
+                  <div class="small text-muted">Date de publication</div>
+                  <div>{{ job.posted_date.strftime('%d/%m/%Y') }}</div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <h5 class="border-bottom pb-2 mb-3">
+          <i class="fas fa-align-left me-2"></i>Description
+        </h5>
+        <div class="mb-4">{{ job.description|safe }}</div>
+
+        {% if job.benefits %}
+        <h5 class="border-bottom pb-2 mb-3">
+          <i class="fas fa-gift me-2"></i>Avantages
+        </h5>
+        <div class="mb-4">{{ job.benefits|safe }}</div>
+        {% endif %}
+
+        <h5 class="border-bottom pb-2 mb-3">
+          <i class="fas fa-tools me-2"></i>Compétences requises
+        </h5>
+        <div class="mb-4">
+          {% if job.skills %} {% for skill in job.skills %}
+          <span class="badge bg-primary me-1 mb-1 p-2">{{ skill.name }}</span>
+          {% endfor %} {% else %}
+          <p>Aucune compétence spécifiée</p>
+          {% endif %}
+        </div>
+
+        <div class="d-grid gap-2">
+          {% if job.application_link %}
+          <a
+            href="{{ job.application_link }}"
+            class="btn btn-primary btn-lg"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="fas fa-paper-plane me-2"></i>Postuler à cette offre
+          </a>
+          {% endif %} {% if job.source_url %}
+          <a
+            href="{{ job.source_url }}"
+            class="btn btn-outline-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="fas fa-external-link-alt me-2"></i>Voir l'offre originale
+          </a>
+          {% endif %}
+
+          <div class="alert alert-info mt-3">
+            <i class="fas fa-info-circle me-2"></i>Cette offre provient d'un
+            site d'emploi externe. Cliquez sur "Voir l'offre originale" pour
+            accéder à tous les détails.
+          </div>
+
+          <a
+            href="{{ url_for('jobs.refresh_jobs', query=job.title, location=job.location) }}"
+            class="btn btn-outline-success"
+          >
+            <i class="fas fa-search me-2"></i>Trouver des offres similaires
+          </a>
+
+          <a
+            href="{{ url_for('jobs.job_list') }}"
+            class="btn btn-outline-secondary"
+          >
+            <i class="fas fa-arrow-left me-2"></i>Retour à la liste des offres
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    {% if current_user.is_authenticated and current_user.profile and match_score
+    is not none %}
+    <div class="card shadow mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-bullseye me-2"></i>Correspondance avec votre profil
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-3">
+          <div class="position-relative d-inline-block">
+            <svg width="150" height="150" viewBox="0 0 150 150">
+              <circle
+                cx="75"
+                cy="75"
+                r="60"
+                fill="none"
+                stroke="#e9ecef"
+                stroke-width="15"
+              />
+              <circle
+                cx="75"
+                cy="75"
+                r="60"
+                fill="none"
+                stroke="#28a745"
+                stroke-width="15"
+                stroke-dasharray="377"
+                stroke-dashoffset="{{ 377 - (377 * match_score / 100) }}"
+                transform="rotate(-90 75 75)"
+              />
+            </svg>
+            <div class="position-absolute top-50 start-50 translate-middle">
+              <h2 class="mb-0">{{ match_score }}%</h2>
+              <div class="text-muted">Match</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>Ce score est calculé en
+          fonction de la correspondance entre votre profil et les exigences de
+          cette offre.
+        </div>
+
+        <div class="d-grid">
+          <a
+            href="{{ url_for('profile.view_profile') }}"
+            class="btn btn-outline-primary"
+          >
+            <i class="fas fa-user me-2"></i>Voir mon profil
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Détection de fraude -->
+    {% if job is defined and job|attr('fraud_probability') is defined and
+    job.fraud_probability is not none %}
+    <div class="card shadow mb-4">
+      <div
+        class="card-header bg-{{ fraud_risk_class }} {% if fraud_risk_class == 'danger' or fraud_risk_class == 'warning' %}text-white{% endif %}"
+      >
+        <h5 class="mb-0">
+          <i class="fas fa-shield-alt me-2"></i>Détection de fraude
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-3">
+          <div class="position-relative d-inline-block">
+            <svg width="150" height="150" viewBox="0 0 150 150">
+              <circle
+                cx="75"
+                cy="75"
+                r="60"
+                fill="none"
+                stroke="#e9ecef"
+                stroke-width="15"
+              />
+              <circle
+                cx="75"
+                cy="75"
+                r="60"
+                fill="none"
+                stroke="
+                  {% if fraud_risk_class == 'success' %}#28a745
+                  {% elif fraud_risk_class == 'info' %}#17a2b8
+                  {% elif fraud_risk_class == 'warning' %}#ffc107
+                  {% elif fraud_risk_class == 'danger' %}#dc3545
+                  {% else %}#6c757d{% endif %}"
+                stroke-width="15"
+                stroke-dasharray="377"
+                stroke-dashoffset="{{ 377 - (377 * job.fraud_probability) }}"
+                transform="rotate(-90 75 75)"
+              />
+            </svg>
+            <div class="position-absolute top-50 start-50 translate-middle">
+              <h2 class="mb-0">{{ (job.fraud_probability * 100)|int }}%</h2>
+              <div class="text-muted">Risque</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-{{ fraud_risk_class }}">
+          <i class="fas fa-info-circle me-2"></i>
+          Niveau de risque : <strong>{{ fraud_risk_level }}</strong>
+        </div>
+
+        {% if fraud_indicators %}
+        <h6 class="border-bottom pb-2 mb-3">
+          Indicateurs de fraude détectés :
+        </h6>
+        <ul class="list-group mb-3">
+          {% for indicator in fraud_indicators %}
+          <li class="list-group-item">
+            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+            {{ indicator.description }}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="alert alert-success">
+          <i class="fas fa-check-circle me-2"></i>
+          Aucun indicateur de fraude détecté.
+        </div>
+        {% endif %}
+
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Cette analyse est basée sur un modèle d'intelligence artificielle
+          entraîné pour détecter les offres d'emploi frauduleuses.
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="card shadow mb-4">
+      <div class="card-header bg-secondary">
+        <h5 class="mb-0">
+          <i class="fas fa-shield-alt me-2"></i>Détection de fraude
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          La détection de fraude n'est pas disponible pour cette offre.
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-share-alt me-2"></i>Partager cette offre
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-center gap-3">
+          <a
+            href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url }}"
+            target="_blank"
+            class="btn btn-outline-primary"
+          >
+            <i class="fab fa-linkedin fa-lg"></i>
+          </a>
+          <a
+            href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ job.title }} chez {{ job.company_name }}"
+            target="_blank"
+            class="btn btn-outline-primary"
+          >
+            <i class="fab fa-twitter fa-lg"></i>
+          </a>
+          <a
+            href="mailto:?subject={{ job.title }} chez {{ job.company_name }}&body=Découvre cette offre d'emploi : {{ request.url }}"
+            class="btn btn-outline-primary"
+          >
+            <i class="fas fa-envelope fa-lg"></i>
+          </a>
+          <button
+            class="btn btn-outline-primary"
+            onclick="navigator.clipboard.writeText('{{ request.url }}'); alert('Lien copié!')"
+          >
+            <i class="fas fa-link fa-lg"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

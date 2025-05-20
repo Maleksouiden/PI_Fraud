@@ -1,0 +1,183 @@
+{% extends "base.html" %} {% block title %}Offres recommandées - JobMatch{%
+endblock %} {% block content %}
+<div class="row">
+  <!-- Profil -->
+  <div class="col-md-3 mb-4">
+    <div class="card shadow mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fas fa-user me-2"></i>Mon profil</h5>
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-3">
+          {% if current_user.profile.photo_path %}
+          <img
+            src="{{ url_for('static', filename=current_user.profile.photo_path) }}"
+            alt="Photo de profil"
+            class="img-fluid rounded-circle mb-2"
+            style="max-width: 100px"
+          />
+          {% else %}
+          <div
+            class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-2"
+            style="width: 100px; height: 100px"
+          >
+            <i class="fas fa-user fa-3x text-secondary"></i>
+          </div>
+          {% endif %}
+          <h5>{{ current_user.profile.get_full_name() }}</h5>
+          <p class="text-muted">
+            {{ current_user.profile.title or 'Aucun titre spécifié' }}
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <h6><i class="fas fa-tools me-2"></i>Compétences</h6>
+          <div>
+            {% if current_user.profile.skills %} {% for skill in
+            current_user.profile.skills %}
+            <span class="badge bg-primary me-1 mb-1">{{ skill.name }}</span>
+            {% endfor %} {% else %}
+            <p>Aucune compétence spécifiée</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <h6><i class="fas fa-map-marker-alt me-2"></i>Lieu souhaité</h6>
+          <p>{{ current_user.profile.desired_location or 'Non spécifié' }}</p>
+        </div>
+
+        <div class="mb-3">
+          <h6><i class="fas fa-laptop-house me-2"></i>Type de travail</h6>
+          <p>{{ current_user.profile.work_type or 'Non spécifié' }}</p>
+        </div>
+
+        <div class="d-grid">
+          <a
+            href="{{ url_for('profile.edit_profile') }}"
+            class="btn btn-outline-primary"
+          >
+            <i class="fas fa-edit me-2"></i>Modifier mon profil
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fas fa-search me-2"></i>Autres options</h5>
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2">
+          <a
+            href="{{ url_for('jobs.job_list') }}"
+            class="btn btn-outline-primary"
+          >
+            <i class="fas fa-list me-2"></i>Toutes les offres
+          </a>
+          <a
+            href="{{ url_for('jobs.refresh_jobs') }}"
+            class="btn btn-outline-primary"
+          >
+            <i class="fas fa-sync-alt me-2"></i>Actualiser les offres
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste des offres recommandées -->
+  <div class="col-md-9">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="mb-0">Offres recommandées</h2>
+      <span class="badge bg-primary">{{ jobs|length }} résultat(s)</span>
+    </div>
+
+    {% if jobs %} {% for job in jobs %}
+    <div class="card shadow mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-2 text-center">
+            {% if job.company_logo %}
+            <img
+              src="{{ job.company_logo }}"
+              alt="{{ job.company_name }}"
+              class="img-fluid mb-2"
+              style="max-height: 60px"
+              onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Yzc1N2QiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWJ1aWxkaW5nIj48cmVjdCB4PSI0IiB5PSIyIiB3aWR0aD0iMTYiIGhlaWdodD0iMjAiIHJ4PSIyIiByeT0iMiI+PC9yZWN0Pjxwb2x5bGluZSBwb2ludHM9IjkgMjIgOSAxMiAxNSAxMiAxNSAyMiI+PC9wb2x5bGluZT48bGluZSB4MT0iOCIgeTE9IjYiIHgyPSIxNiIgeTI9IjYiPjwvbGluZT48bGluZSB4MT0iOCIgeTE9IjEwIiB4Mj0iMTYiIHkyPSIxMCI+PC9saW5lPjwvc3ZnPg==';"
+            />
+            {% else %}
+            <div
+              class="bg-light rounded d-flex align-items-center justify-content-center mb-2"
+              style="height: 60px"
+            >
+              <i class="fas fa-building fa-2x text-secondary"></i>
+            </div>
+            {% endif %}
+            <div class="small text-muted">{{ job.company_name }}</div>
+          </div>
+          <div class="col-md-7">
+            <h5 class="card-title mb-1">{{ job.title }}</h5>
+            <div class="mb-2">
+              {% if job.location %}
+              <span class="badge bg-light text-dark me-2">
+                <i class="fas fa-map-marker-alt me-1"></i>{{ job.location }}
+              </span>
+              {% endif %} {% if job.work_type %}
+              <span class="badge bg-light text-dark me-2">
+                <i class="fas fa-laptop-house me-1"></i>{{ job.work_type }}
+              </span>
+              {% endif %} {% if job.salary %}
+              <span class="badge bg-light text-dark">
+                <i class="fas fa-euro-sign me-1"></i>{{ job.salary }} €/an
+              </span>
+              {% endif %}
+            </div>
+            <p class="card-text small text-muted">
+              {{ job.description|truncate(150) }}
+            </p>
+            <div class="mt-2">
+              {% for skill in job.skills[:5] %}
+              <span class="badge bg-secondary me-1">{{ skill.name }}</span>
+              {% endfor %} {% if job.skills|length > 5 %}
+              <span class="badge bg-secondary"
+                >+{{ job.skills|length - 5 }}</span
+              >
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-3 text-end">
+            {% if job.id in job_scores %}
+            <div class="mb-2">
+              <div class="progress" style="height: 8px">
+                <div
+                  class="progress-bar bg-success"
+                  role="progressbar"
+                  style="width: {{ job_scores[job.id] }}%"
+                ></div>
+              </div>
+              <div class="small text-muted mt-1">
+                Match: {{ job_scores[job.id] }}%
+              </div>
+            </div>
+            {% endif %}
+            <a
+              href="{{ url_for('jobs.job_detail', job_id=job.id) }}"
+              class="btn btn-primary"
+            >
+              <i class="fas fa-info-circle me-1"></i>Détails
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>Aucune offre d'emploi ne correspond
+      à votre profil. Essayez d'ajouter plus de compétences à votre profil ou de
+      modifier vos préférences.
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

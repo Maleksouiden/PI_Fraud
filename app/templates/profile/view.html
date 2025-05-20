@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Mon profil - JobMatch{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-user me-2"></i>Informations personnelles</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if profile.photo_path %}
+                <img src="{{ url_for('static', filename=profile.photo_path) }}" alt="Photo de profil" class="img-fluid rounded-circle mb-3" style="max-width: 150px;">
+                {% else %}
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 150px; height: 150px;">
+                    <i class="fas fa-user fa-5x text-secondary"></i>
+                </div>
+                {% endif %}
+                <h4>{{ profile.get_full_name() }}</h4>
+                <p class="text-muted">{{ profile.title or 'Aucun titre spécifié' }}</p>
+                
+                <div class="list-group mt-3">
+                    {% if profile.phone %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1"><i class="fas fa-phone me-2"></i>Téléphone</h6>
+                        </div>
+                        <p class="mb-1">{{ profile.phone }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if profile.address %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1"><i class="fas fa-map-marker-alt me-2"></i>Adresse</h6>
+                        </div>
+                        <p class="mb-1">{{ profile.address }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1"><i class="fas fa-envelope me-2"></i>Email</h6>
+                        </div>
+                        <p class="mb-1">{{ current_user.email }}</p>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-primary">
+                        <i class="fas fa-edit me-2"></i>Modifier mon profil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-briefcase me-2"></i>Informations professionnelles</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-graduation-cap me-2"></i>Niveau d'études</h6>
+                        <p>{{ profile.education_level or 'Non spécifié' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-history me-2"></i>Années d'expérience</h6>
+                        <p>{{ profile.years_experience or 0 }} an(s)</p>
+                    </div>
+                </div>
+                
+                <h6><i class="fas fa-tools me-2"></i>Compétences</h6>
+                <div class="mb-3">
+                    {% if profile.skills %}
+                        {% for skill in profile.skills %}
+                        <span class="badge bg-primary me-1 mb-1">{{ skill.name }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <p>Aucune compétence spécifiée</p>
+                    {% endif %}
+                </div>
+                
+                {% if profile.resume_path %}
+                <div class="mb-3">
+                    <h6><i class="fas fa-file-alt me-2"></i>CV</h6>
+                    <a href="{{ url_for('static', filename=profile.resume_path) }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                        <i class="fas fa-download me-1"></i>Télécharger le CV
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-search me-2"></i>Préférences d'emploi</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-map-marker-alt me-2"></i>Lieu souhaité</h6>
+                        <p>{{ profile.desired_location or 'Non spécifié' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-euro-sign me-2"></i>Salaire souhaité</h6>
+                        <p>{% if profile.desired_salary %}{{ profile.desired_salary }} €/an{% else %}Non spécifié{% endif %}</p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h6><i class="fas fa-laptop-house me-2"></i>Type de travail préféré</h6>
+                    <p>{{ profile.work_type or 'Non spécifié' }}</p>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('jobs.match_jobs') }}" class="btn btn-primary">
+                        <i class="fas fa-bullseye me-2"></i>Voir les offres qui correspondent à mon profil
+                    </a>
+                    <a href="{{ url_for('jobs.job_list') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-search me-2"></i>Rechercher des offres d'emploi
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

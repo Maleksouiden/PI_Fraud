@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Mon compte - JobMatch{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-cog me-2"></i>Paramètres du compte</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('auth.account') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ current_user.username }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card shadow mt-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-link me-2"></i>Liens rapides</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('profile.view_profile') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-id-card me-2"></i>Voir mon profil
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-edit me-2"></i>Modifier mon profil
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('jobs.match_jobs') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-bullseye me-2"></i>Offres recommandées
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('history.search_history') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-history me-2"></i>Historique de recherche
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

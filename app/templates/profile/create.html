@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Créer mon profil - JobMatch{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Créer mon profil professionnel</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('profile.create_profile') }}" enctype="multipart/form-data">
+                    <h5 class="border-bottom pb-2 mb-3">Informations personnelles</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label">Prénom *</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label">Nom *</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Téléphone</label>
+                            <input type="tel" class="form-control" id="phone" name="phone">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="address" class="form-label">Adresse</label>
+                            <input type="text" class="form-control" id="address" name="address">
+                        </div>
+                    </div>
+                    
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Informations professionnelles</h5>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Titre professionnel</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Ex: Développeur Web, Data Scientist...">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="years_experience" class="form-label">Années d'expérience</label>
+                            <input type="number" class="form-control" id="years_experience" name="years_experience" min="0">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="education_level" class="form-label">Niveau d'études</label>
+                            <select class="form-select" id="education_level" name="education_level">
+                                <option value="">Sélectionner...</option>
+                                <option value="Bac">Bac</option>
+                                <option value="Bac+2">Bac+2</option>
+                                <option value="Bac+3">Bac+3</option>
+                                <option value="Bac+5">Bac+5</option>
+                                <option value="Bac+8">Bac+8</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="skills" class="form-label">Compétences</label>
+                        <input type="text" class="form-control" id="skills" name="skills" placeholder="Séparez les compétences par des virgules">
+                        <div class="form-text">Ex: Python, JavaScript, SQL, Machine Learning, Communication</div>
+                    </div>
+                    
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Préférences d'emploi</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="desired_salary" class="form-label">Salaire souhaité (€/an)</label>
+                            <input type="number" class="form-control" id="desired_salary" name="desired_salary" min="0">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="desired_location" class="form-label">Lieu souhaité</label>
+                            <input type="text" class="form-control" id="desired_location" name="desired_location" placeholder="Ex: Paris, Lyon...">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="work_type" class="form-label">Type de travail préféré</label>
+                        <select class="form-select" id="work_type" name="work_type">
+                            <option value="">Sélectionner...</option>
+                            <option value="Présentiel">Présentiel</option>
+                            <option value="Télétravail">Télétravail</option>
+                            <option value="Mixte">Mixte</option>
+                        </select>
+                    </div>
+                    
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Documents</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="resume" class="form-label">CV (PDF, DOC, DOCX)</label>
+                            <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="photo" class="form-label">Photo de profil (JPG, PNG)</label>
+                            <input type="file" class="form-control" id="photo" name="photo" accept=".jpg,.jpeg,.png">
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary">Créer mon profil</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

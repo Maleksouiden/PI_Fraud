@@ -1,0 +1,169 @@
+{% extends "base.html" %} {% block title %}Accueil - JobMatch{% endblock %} {%
+block content %}
+<!-- Hero Section -->
+<div class="bg-primary text-white p-5 rounded-3 mb-5">
+  <div class="container py-5">
+    <h1 class="display-4 fw-bold">Trouvez l'emploi qui vous correspond</h1>
+    <p class="fs-4">
+      JobMatch utilise votre profil pour vous recommander les offres d'emploi
+      les plus pertinentes.
+    </p>
+    <div class="mt-4">
+      {% if current_user.is_authenticated %} {% if current_user.profile %}
+      <a
+        href="{{ url_for('jobs.match_jobs') }}"
+        class="btn btn-light btn-lg me-2"
+      >
+        <i class="fas fa-bullseye me-2"></i>Offres recommandées
+      </a>
+      {% else %}
+      <a
+        href="{{ url_for('profile.create_profile') }}"
+        class="btn btn-light btn-lg me-2"
+      >
+        <i class="fas fa-user-plus me-2"></i>Créer mon profil
+      </a>
+      {% endif %} {% else %}
+      <a href="{{ url_for('auth.signup') }}" class="btn btn-light btn-lg me-2">
+        <i class="fas fa-user-plus me-2"></i>S'inscrire
+      </a>
+      <a
+        href="{{ url_for('auth.login') }}"
+        class="btn btn-outline-light btn-lg"
+      >
+        <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Search Section -->
+<div class="card shadow mb-5">
+  <div class="card-body p-4">
+    <h3 class="card-title mb-4">Rechercher des offres d'emploi réelles</h3>
+    <div class="alert alert-info mb-4">
+      <i class="fas fa-info-circle me-2"></i>
+      <strong>Offres d'emploi 100% réelles :</strong> Notre système recherche et
+      affiche uniquement des offres d'emploi réelles provenant de LinkedIn,
+      Indeed, Monster et Pôle Emploi. Aucune offre fictive ou exemple n'est
+      affichée.
+    </div>
+    <form action="{{ url_for('jobs.refresh_jobs') }}" method="GET">
+      <div class="row g-3">
+        <div class="col-md-5">
+          <label for="query" class="form-label">Mots-clés</label>
+          <input
+            type="text"
+            class="form-control"
+            id="query"
+            name="query"
+            placeholder="Titre, compétence, entreprise..."
+            required
+          />
+          <div class="form-text">
+            Ex: développeur python, data scientist, chef de projet...
+          </div>
+        </div>
+        <div class="col-md-5">
+          <label for="location" class="form-label">Lieu</label>
+          <input
+            type="text"
+            class="form-control"
+            id="location"
+            name="location"
+            placeholder="Ville, région..."
+            required
+          />
+          <div class="form-text">Ex: Paris, Lyon, Marseille, France...</div>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="fas fa-globe me-2"></i>Chercher en ligne
+          </button>
+        </div>
+      </div>
+    </form>
+    <div class="mt-3 text-center">
+      <small class="text-muted">
+        <i class="fas fa-bolt me-1"></i>Les résultats sont scrapés en temps réel
+        depuis les principaux sites d'emploi
+      </small>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5">
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow">
+      <div class="card-body text-center p-4">
+        <div
+          class="feature-icon bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+          style="width: 80px; height: 80px"
+        >
+          <i class="fas fa-user-tie fa-2x"></i>
+        </div>
+        <h4>Profil personnalisé</h4>
+        <p>
+          Créez votre profil professionnel détaillé pour recevoir des
+          recommandations d'emploi pertinentes.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow">
+      <div class="card-body text-center p-4">
+        <div
+          class="feature-icon bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+          style="width: 80px; height: 80px"
+        >
+          <i class="fas fa-bullseye fa-2x"></i>
+        </div>
+        <h4>Matching intelligent</h4>
+        <p>
+          Notre algorithme analyse votre profil et trouve les offres qui
+          correspondent le mieux à vos compétences et préférences.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow">
+      <div class="card-body text-center p-4">
+        <div
+          class="feature-icon bg-primary text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center"
+          style="width: 80px; height: 80px"
+        >
+          <i class="fas fa-history fa-2x"></i>
+        </div>
+        <h4>Historique de recherche</h4>
+        <p>
+          Consultez votre historique de recherche et retrouvez facilement les
+          offres qui vous ont intéressées.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Call to Action -->
+<div class="bg-light p-5 rounded-3 text-center">
+  <h2>Prêt à trouver votre emploi idéal?</h2>
+  <p class="lead">
+    Inscrivez-vous gratuitement et commencez votre recherche dès aujourd'hui.
+  </p>
+  <div class="mt-4">
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('jobs.job_list') }}" class="btn btn-primary btn-lg">
+      <i class="fas fa-search me-2"></i>Explorer les offres
+    </a>
+    {% else %}
+    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-lg">
+      <i class="fas fa-user-plus me-2"></i>S'inscrire gratuitement
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

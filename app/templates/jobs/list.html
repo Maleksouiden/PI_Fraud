@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}Offres d'emploi - JobMatch{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Filtres -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filtres</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('jobs.job_list') }}" method="GET">
+                    <div class="mb-3">
+                        <label for="query" class="form-label">Mots-clés</label>
+                        <input type="text" class="form-control" id="query" name="query" value="{{ query or '' }}" placeholder="Titre, compétence, entreprise...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Lieu</label>
+                        <input type="text" class="form-control" id="location" name="location" value="{{ location or '' }}" placeholder="Ville, région...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="work_type" class="form-label">Type de travail</label>
+                        <select class="form-select" id="work_type" name="work_type">
+                            <option value="">Tous</option>
+                            <option value="Présentiel" {% if work_type == 'Présentiel' %}selected{% endif %}>Présentiel</option>
+                            <option value="Télétravail" {% if work_type == 'Télétravail' %}selected{% endif %}>Télétravail</option>
+                            <option value="Mixte" {% if work_type == 'Mixte' %}selected{% endif %}>Mixte</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="salary_min" class="form-label">Salaire minimum (€/an)</label>
+                        <input type="number" class="form-control" id="salary_min" name="salary_min" value="{{ salary_min or '' }}" min="0">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="skills" class="form-label">Compétences recherchées</label>
+                        <input type="text" class="form-control" id="skills" name="skills" value="{{ skills or '' }}" placeholder="Ex: Python, JavaScript, SQL...">
+                        <div class="form-text">Séparez les compétences par des virgules</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="education" class="form-label">Niveau d'études</label>
+                        <select class="form-select" id="education" name="education">
+                            <option value="">Tous</option>
+                            <option value="Bac" {% if education == 'Bac' %}selected{% endif %}>Bac</option>
+                            <option value="Bac+2" {% if education == 'Bac+2' %}selected{% endif %}>Bac+2</option>
+                            <option value="Bac+3" {% if education == 'Bac+3' %}selected{% endif %}>Bac+3</option>
+                            <option value="Bac+5" {% if education == 'Bac+5' %}selected{% endif %}>Bac+5</option>
+                            <option value="Bac+8" {% if education == 'Bac+8' %}selected{% endif %}>Bac+8</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="experience_max" class="form-label">Expérience maximale requise (années)</label>
+                        <input type="number" class="form-control" id="experience_max" name="experience_max" value="{{ experience_max or '' }}" min="0">
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="ignore_profile" name="ignore_profile" value="1" {% if ignore_profile %}checked{% endif %}>
+                            <label class="form-check-label" for="ignore_profile">Ignorer mon profil pour cette recherche</label>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3 bg-light">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Détection de fraude</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="fraud_max" class="form-label">Risque de fraude maximum</label>
+                                <select class="form-select" id="fraud_max" name="fraud_max">
+                                    <option value="">Tous</option>
+                                    <option value="0.2" {% if fraud_max == 0.2 %}selected{% endif %}>Très faible (< 20%)</option>
+                                    <option value="0.4" {% if fraud_max == 0.4 %}selected{% endif %}>Faible (< 40%)</option>
+                                    <option value="0.6" {% if fraud_max == 0.6 %}selected{% endif %}>Moyen (< 60%)</option>
+                                    <option value="0.8" {% if fraud_max == 0.8 %}selected{% endif %}>Élevé (< 80%)</option>
+                                </select>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="hide_fraud" name="hide_fraud" value="1" {% if hide_fraud %}checked{% endif %}>
+                                <label class="form-check-label" for="hide_fraud">Masquer les offres à risque élevé</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Rechercher
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Réinitialiser
+                        </button>
+                    </div>
+                </form>
+
+                <hr>
+
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#searchModal">
+                        <i class="fas fa-globe me-2"></i>Scraper de nouvelles offres
+                    </button>
+
+                    <a href="{{ url_for('jobs.refresh_jobs', query=query, location=location) }}" class="btn btn-outline-primary">
+                        <i class="fas fa-sync-alt me-2"></i>Actualiser les offres
+                    </a>
+
+                    {% if current_user.is_authenticated and current_user.profile %}
+                    <a href="{{ url_for('jobs.match_jobs') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-bullseye me-2"></i>Offres recommandées
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Modal de recherche spécifique -->
+                <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="searchModalLabel"><i class="fas fa-globe me-2"></i>Scraper des offres d'emploi réelles</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1) grayscale(100%) brightness(200%);"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-info mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Scraping en temps réel :</strong> Les offres seront récupérées depuis LinkedIn, Indeed, Monster et Pôle Emploi. Seules les offres avec des liens valides seront affichées.
+                                </div>
+                                <form action="{{ url_for('jobs.refresh_jobs') }}" method="GET">
+                                    <div class="mb-3">
+                                        <label for="modal_query" class="form-label">Poste recherché</label>
+                                        <input type="text" class="form-control" id="modal_query" name="query" placeholder="Ex: développeur python, data scientist..." required>
+                                        <div class="form-text">Soyez précis pour obtenir des résultats pertinents</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="modal_location" class="form-label">Lieu</label>
+                                        <input type="text" class="form-control" id="modal_location" name="location" placeholder="Ex: Paris, Lyon, Marseille..." required>
+                                        <div class="form-text">Ville, région ou pays</div>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-globe me-2"></i>Scraper des offres en ligne
+                                        </button>
+                                    </div>
+                                </form>
+                                <div class="mt-3 text-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-bolt me-1"></i>Cette opération peut prendre quelques instants
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des offres -->
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0">Offres d'emploi</h2>
+            <span class="badge bg-primary">{{ jobs|length }} résultat(s)</span>
+        </div>
+
+        {% if jobs %}
+        <div class="alert alert-success mb-4">
+            <div class="d-flex">
+                <div class="me-3">
+                    <i class="fas fa-check-circle fa-2x"></i>
+                </div>
+                <div>
+                    <h5 class="alert-heading">Offres d'emploi 100% réelles</h5>
+                    <p class="mb-0">Ces offres ont été scrapées depuis des sites d'emploi comme LinkedIn, Indeed, Monster et Pôle Emploi. Seules les offres avec des liens valides sont affichées. Pour trouver de nouvelles offres, utilisez le bouton <strong>"Scraper de nouvelles offres"</strong> dans le menu de gauche.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if jobs %}
+            {% for job in jobs %}
+            <div class="card shadow mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 text-center">
+                            {% if job.company_logo %}
+                            <img src="{{ job.company_logo }}" alt="{{ job.company_name }}" class="img-fluid mb-2" style="max-height: 60px;"
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2Yzc1N2QiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWJ1aWxkaW5nIj48cmVjdCB4PSI0IiB5PSIyIiB3aWR0aD0iMTYiIGhlaWdodD0iMjAiIHJ4PSIyIiByeT0iMiI+PC9yZWN0Pjxwb2x5bGluZSBwb2ludHM9IjkgMjIgOSAxMiAxNSAxMiAxNSAyMiI+PC9wb2x5bGluZT48bGluZSB4MT0iOCIgeTE9IjYiIHgyPSIxNiIgeTI9IjYiPjwvbGluZT48bGluZSB4MT0iOCIgeTE9IjEwIiB4Mj0iMTYiIHkyPSIxMCI+PC9saW5lPjwvc3ZnPg==';">
+                            {% else %}
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center mb-2" style="height: 60px;">
+                                <i class="fas fa-building fa-2x text-secondary"></i>
+                            </div>
+                            {% endif %}
+                            <div class="small fw-bold">{{ job.company_name }}</div>
+                            <div class="small text-muted">
+                                {% if job.source_url and 'linkedin.com' in job.source_url %}
+                                <i class="fab fa-linkedin text-primary" title="LinkedIn"></i>
+                                {% elif job.source_url and 'indeed.com' in job.source_url %}
+                                <i class="fas fa-search-dollar text-primary" title="Indeed"></i>
+                                {% elif job.source_url and 'monster.fr' in job.source_url %}
+                                <i class="fas fa-dragon text-primary" title="Monster"></i>
+                                {% elif job.source_url and 'pole-emploi.fr' in job.source_url %}
+                                <i class="fas fa-building text-primary" title="Pôle Emploi"></i>
+                                {% else %}
+                                <i class="fas fa-globe text-primary" title="Site web"></i>
+                                {% endif %}
+                                Source externe
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h5 class="card-title mb-1">{{ job.title }}</h5>
+                            <div class="mb-2">
+                                {% if job.location %}
+                                <span class="badge bg-light text-dark me-2">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ job.location }}
+                                </span>
+                                {% endif %}
+                                {% if job.work_type %}
+                                <span class="badge bg-light text-dark me-2">
+                                    <i class="fas fa-laptop-house me-1"></i>{{ job.work_type }}
+                                </span>
+                                {% endif %}
+                                {% if job.salary %}
+                                <span class="badge bg-light text-dark">
+                                    <i class="fas fa-euro-sign me-1"></i>{{ job.salary }} €/an
+                                </span>
+                                {% endif %}
+                            </div>
+                            <p class="card-text small text-muted">
+                                {{ job.description|truncate(150) }}
+                            </p>
+                            <div class="mt-2">
+                                {% for skill in job.skills[:5] %}
+                                <span class="badge bg-secondary me-1">{{ skill.name }}</span>
+                                {% endfor %}
+                                {% if job.skills|length > 5 %}
+                                <span class="badge bg-secondary">+{{ job.skills|length - 5 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            {% if current_user.is_authenticated and current_user.profile and job.id in job_scores %}
+                            <div class="mb-2">
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ job_scores[job.id] }}%"></div>
+                                </div>
+                                <div class="small text-muted mt-1">Match: {{ job_scores[job.id] }}%</div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Indicateur de risque de fraude -->
+                            <div class="mb-2">
+                                {% if job is defined and job|attr('fraud_probability') is defined and job.fraud_probability is not none %}
+                                    {% set risk_level, risk_class = job.get_fraud_risk_level() %}
+                                    <span class="badge bg-{{ risk_class }} mb-1">
+                                        <i class="fas fa-shield-alt me-1"></i>Risque: {{ risk_level }}
+                                    </span>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-{{ risk_class }}" role="progressbar"
+                                             style="width: {{ (job.fraud_probability * 100)|int }}%"></div>
+                                    </div>
+                                    <div class="small text-muted mt-1">
+                                        Probabilité de fraude: {{ (job.fraud_probability * 100)|int }}%
+                                    </div>
+                                {% else %}
+                                    <span class="badge bg-success mb-1">
+                                        <i class="fas fa-shield-alt me-1"></i>Risque: Très faible
+                                    </span>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 10%"></div>
+                                    </div>
+                                    <div class="small text-muted mt-1">
+                                        Probabilité de fraude: 10%
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="btn-group mb-2">
+                                <a href="{{ url_for('jobs.job_detail', job_id=job.id) }}" class="btn btn-primary">
+                                    <i class="fas fa-info-circle me-1"></i>Détails
+                                </a>
+                                {% if job.source_url %}
+                                <a href="{{ job.source_url }}" class="btn btn-outline-primary" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-external-link-alt me-1"></i>Voir l'offre
+                                </a>
+                                {% endif %}
+                            </div>
+                            <div class="small text-muted">
+                                {% if job.posted_date %}
+                                    Publié le {{ job.posted_date.strftime('%d/%m/%Y') }}
+                                {% elif job.scraped_date %}
+                                    Ajouté le {{ job.scraped_date.strftime('%d/%m/%Y') }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>Aucune offre d'emploi ne correspond à vos critères.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
