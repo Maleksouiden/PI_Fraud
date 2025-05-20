@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from app import db
 from app.models.job import Job
 from app.models.search_history import SearchHistory
-from app.services.job_scraper import scrape_jobs
+from app.services.scraper_api import scrape_jobs
 from app.services.job_matcher import match_jobs_to_profile
 
 jobs = Blueprint('jobs', __name__)

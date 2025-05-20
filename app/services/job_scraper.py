@@ -315,16 +315,11 @@ def scrape_indeed_jobs(query='', location=''):
                 # Extraire les compétences à partir de la description
                 skills = extract_skills_from_description(description)
 
-                # Nettoyer le nom de l'entreprise pour le logo
-                clean_company_for_logo = company_name.lower().replace(' ', '').replace(',', '').replace('.', '')
-                if len(clean_company_for_logo) < 3:
-                    clean_company_for_logo = "company"  # Fallback pour les noms trop courts
-
                 # Créer l'objet d'offre d'emploi
                 job = {
                     'title': title,
                     'company_name': company_name,
-                    'company_logo': f"https://logo.clearbit.com/{clean_company_for_logo}.com",
+                    'company_logo': f"https://logo.clearbit.com/{company_name.lower().replace(' ', '').replace(',', '').replace('.', '')}.com",
                     'description': description,
                     'location': location_val,
                     'salary': salary,
@@ -381,7 +376,7 @@ def save_job_to_db(job_data):
         existing_job.experience_required = job_data['experience_required']
         existing_job.benefits = job_data['benefits']
         existing_job.application_link = job_data['application_link']
-        existing_job.scraped_date = datetime.now(timezone.utc).replace(year=2023)
+        existing_job.scraped_date = datetime.now(timezone.utc)
 
         # Mise à jour des informations de fraude (si les colonnes existent)
         try:
@@ -417,8 +412,8 @@ def save_job_to_db(job_data):
             benefits=job_data['benefits'],
             application_link=job_data['application_link'],
             source_url=job_data['source_url'],
-            posted_date=datetime.now(timezone.utc).replace(year=2023),  # Utiliser l'année 2023 pour éviter les dates futures
-            scraped_date=datetime.now(timezone.utc).replace(year=2023)
+            posted_date=datetime.now(timezone.utc),  # Dans une application réelle, on extrairait cette date du site
+            scraped_date=datetime.now(timezone.utc)
         )
 
         # Définir les informations de fraude (si les colonnes existent)
