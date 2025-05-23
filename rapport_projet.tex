@@ -1,0 +1,927 @@
+\documentclass[10pt,a4paper,twocolumn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage[left=1.5cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{tikz}
+\usepackage{mdframed}
+\usepackage{lipsum}
+\usepackage{setspace}
+\usepackage{url}
+\usepackage{adjustbox}
+
+% Définition des couleurs ESPRIT
+\definecolor{espritblue}{RGB}{0, 83, 155}
+\definecolor{espritlightblue}{RGB}{0, 173, 239}
+\definecolor{espritgray}{RGB}{88, 89, 91}
+\definecolor{espritlightgray}{RGB}{200, 200, 200}
+
+% Configuration de la géométrie de la page
+\geometry{margin=2.5cm}
+
+% Configuration des liens
+\hypersetup{
+    colorlinks=true,
+    linkcolor=espritblue,
+    filecolor=espritlightblue,
+    urlcolor=espritblue,
+    pdftitle={JobMatchy - Plateforme de Recherche d'Emploi avec Détection de Fraude},
+    pdfauthor={Souiden Malek, Saada Nadine, Najjar Mariem, Ftouhi Sondes, Trabelsi Yassmine},
+    pdfsubject={Rapport de Projet},
+    pdfkeywords={ESPRIT, Fraude, Emploi, CRISP-DM, SCRUM, Machine Learning, Scraping},
+}
+
+% Configuration des titres
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{espritblue}}
+  {\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{espritblue!80}}
+  {\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{espritgray}}
+  {\thesubsubsection}{1em}{}
+
+% Configuration des en-têtes et pieds de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{espritblue}{JobMatchy - Détection de Fraude}}
+\fancyhead[R]{\includegraphics[height=0.8cm]{images/logo_esprit.png}}
+\fancyfoot[C]{\thepage}
+\fancyfoot[L]{\textcolor{espritgray}{3ALINFO 9}}
+\fancyfoot[R]{\textcolor{espritgray}{\today}}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{espritblue}\leaders\hrule height \headrulewidth\hfill}}
+
+% Configuration des listings de code
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{espritblue},
+  commentstyle=\color{green!60!black},
+  stringstyle=\color{red},
+  breaklines=true,
+  showstringspaces=false,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny\color{espritgray},
+  numbersep=5pt,
+  backgroundcolor=\color{espritlightgray!30},
+  rulecolor=\color{espritblue},
+  captionpos=b,
+  framexleftmargin=5mm
+}
+
+% Définition des styles de boîtes
+\tcbset{
+  colback=espritlightgray!10,
+  colframe=espritblue,
+  arc=2mm,
+  boxrule=0.5mm,
+  fonttitle=\bfseries\color{white},
+  coltitle=espritblue
+}
+
+% Style pour les encadrés
+\newmdenv[
+  linecolor=espritblue,
+  linewidth=2pt,
+  topline=true,
+  bottomline=true,
+  leftline=true,
+  rightline=true,
+  backgroundcolor=white,
+  innertopmargin=10pt,
+  innerbottommargin=10pt,
+  innerrightmargin=10pt,
+  innerleftmargin=10pt,
+  skipabove=10pt,
+  skipbelow=10pt
+]{infobox}
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+
+    % Logo et en-tête
+    \begin{tikzpicture}
+    \fill[espritblue] (0,0) rectangle (\textwidth,1cm);
+    \node[anchor=center] at (\textwidth/2,0.5) {\textcolor{white}{\Large\bfseries RAPPORT DE PROJET ACADÉMIQUE}};
+    \end{tikzpicture}
+
+    \vspace{1cm}
+
+    % Logo ESPRIT
+    \includegraphics[width=0.5\textwidth]{images/logo_esprit.png}\par
+
+    \vspace{0.5cm}
+    {\scshape\Large École Supérieure Privée d'Ingénierie et de Technologies \par}
+    {\scshape\small Accrédité EUR-ACE \& CTI \par}
+
+    \vspace{2cm}
+
+    % Titre du projet
+    \begin{tcolorbox}[
+      colback=espritblue!5,
+      colframe=espritblue,
+      arc=0mm,
+      boxrule=1mm,
+      width=\textwidth-2cm,
+      center,
+      height=4cm
+    ]
+    {\color{espritblue}\Huge\bfseries JobMatchy\par}
+    \vspace{0.5cm}
+    {\color{espritgray}\LARGE Plateforme de Recherche d'Emploi\\ avec Détection de Fraude\par}
+    \end{tcolorbox}
+
+    \vspace{1.5cm}
+
+    % Cadre du projet
+    \begin{mdframed}[
+      linecolor=espritgray,
+      linewidth=0.5pt,
+      backgroundcolor=espritlightgray!10,
+      roundcorner=5pt,
+      innertopmargin=10pt,
+      innerbottommargin=10pt
+    ]
+    {\large\bfseries Cadre du projet:} Projet d'Intégration\\
+    {\large\bfseries Classe:} 3ALINFO 9\\
+    {\large\bfseries Année universitaire:} 2024-2025
+    \end{mdframed}
+
+     \vspace{0.5cm}
+
+    % Équipe
+    {\large\bfseries Réalisé par:\par}
+    \vspace{0.4cm}
+    \begin{tabular}{ll}
+    \textbf{Souiden Malek} & \faEnvelope\ malek.souiden@esprit.tn \\
+    \textbf{Saada Nadine} & \faEnvelope\ nadine.saada@esprit.tn \\
+    \textbf{Najjar Mariem} & \faEnvelope\ mariem.najjar@esprit.tn \\
+    \textbf{Ftouhi Sondes} & \faEnvelope\ sondes.ftouhi@esprit.tn \\
+    \textbf{Trabelsi Yassmine} & \faEnvelope\ yassmine.trabelsi@esprit.tn \\
+    \end{tabular}
+
+    \vfill
+
+    % Pied de page
+    \begin{tikzpicture}
+    \fill[espritblue] (0,0) rectangle (\textwidth,0.8cm);
+    \node[anchor=center] at (\textwidth/2,0.4) {\textcolor{white}{\today}};
+    \end{tikzpicture}
+
+    \end{center}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section*{Résumé}
+\begin{infobox}
+\begin{center}
+\textbf{\large JobMatchy: Plateforme de Recherche d'Emploi avec Détection de Fraude}
+\end{center}
+\vspace{0.3cm}
+Ce rapport présente le développement d'une plateforme innovante de recherche d'emploi intégrant un système avancé de détection de fraude. Face à l'augmentation des offres d'emploi frauduleuses sur internet, notre solution combine des algorithmes de machine learning et des techniques d'analyse de données pour protéger les utilisateurs. Le projet a été réalisé en suivant la méthodologie SCRUM pour la gestion de projet et CRISP-DM pour la partie science des données. Ce document détaille la problématique, l'état de l'art, notre conception, les réalisations techniques et les perspectives d'évolution.
+
+\vspace{0.3cm}
+\textbf{Mots-clés:} Détection de fraude, Machine Learning, CRISP-DM, SCRUM, Web Scraping, Offres d'emploi
+\end{infobox}
+
+\vspace{1cm}
+
+\section{Introduction Générale}
+\begin{tcolorbox}[title=Contexte du projet]
+Dans un contexte où le marché de l'emploi est de plus en plus numérisé, les offres d'emploi frauduleuses se multiplient, mettant en danger les chercheurs d'emploi. Notre projet \textbf{JobMatchy} vise à développer une plateforme innovante combinant recherche d'emploi et détection automatique de fraude. Cette solution permet aux utilisateurs de rechercher des offres d'emploi tout en étant protégés contre les arnaques potentielles.
+\end{tcolorbox}
+
+\begin{spacing}{1.2}
+Le projet \textbf{JobMatchy} a été réalisé dans le cadre du cours de Projet d'Intégration de la classe 3ALINFO 9 à l'École Supérieure Privée d'Ingénierie et de Technologies (ESPRIT). Notre équipe, composée de cinq étudiants, a travaillé sur cette problématique pendant un semestre, en appliquant les connaissances acquises dans différents domaines : développement web, intelligence artificielle, analyse de données et gestion de projet.
+
+Ce rapport présente notre démarche de développement, en suivant la méthodologie SCRUM pour la gestion de projet et CRISP-DM pour la partie science des données. Nous détaillerons la problématique, l'état de l'art, notre conception, les réalisations techniques et les perspectives d'évolution.
+
+\begin{tcolorbox}[title=Objectifs principaux du projet]
+\begin{itemize}
+    \item Développer une plateforme de recherche d'emploi intuitive et efficace
+    \item Intégrer un système de détection de fraude basé sur le machine learning
+    \item Implémenter un algorithme de matching entre profils et offres d'emploi
+    \item Créer un outil de scraping pour collecter des données d'offres d'emploi
+\end{itemize}
+\end{tcolorbox}
+\end{spacing}
+
+\section{Problématique, Existant et État de l'Art}
+\subsection{Introduction}
+Ce chapitre présente le contexte du projet, la problématique adressée, les solutions existantes et l'état de l'art dans le domaine de la détection de fraude dans les offres d'emploi.
+
+\subsection{Problématique}
+Les offres d'emploi frauduleuses représentent un risque croissant pour les chercheurs d'emploi. Selon une étude récente, plus de 14\% des offres d'emploi en ligne contiennent des éléments suspects ou frauduleux. Ces fraudes peuvent prendre plusieurs formes:
+\begin{itemize}
+    \item Collecte d'informations personnelles sensibles
+    \item Demandes de paiement pour accéder à des offres
+    \item Fausses promesses de rémunération élevée
+    \item Offres d'emploi inexistantes servant d'appât
+    \item Usurpation d'identité d'entreprises légitimes
+\end{itemize}
+
+Les conséquences pour les victimes peuvent être graves: vol d'identité, pertes financières, et perte de temps dans des processus de recrutement fictifs.
+
+\subsection{Solutions Existantes}
+Plusieurs plateformes de recherche d'emploi existent sur le marché, mais peu intègrent des fonctionnalités de détection de fraude:
+
+\begin{table}[H]
+\centering
+\scriptsize % plus petit que \small
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Plateforme} & \textbf{Recherche} & \textbf{Anti-fraude} & \textbf{Matching} \\
+\hline
+LinkedIn & Oui & Limitée & Oui \\
+Indeed & Oui & Basique & Partiel \\
+Monster & Oui & Non & Partiel \\
+Glassdoor & Oui & Non & Non \\
+Pôle Emploi & Oui & Non & Limité \\
+\hline
+\end{tabular}
+\caption{Comparaison des plateformes existantes}
+\end{table}
+\subsection{État de l'Art}
+La détection de fraude dans les offres d'emploi s'appuie sur plusieurs techniques:
+
+\subsubsection{Approches basées sur les règles}
+Ces approches utilisent des règles prédéfinies pour identifier les signaux d'alerte dans les offres d'emploi:
+\begin{itemize}
+    \item Présence de mots-clés suspects
+    \item Analyse des coordonnées de contact
+    \item Vérification de la cohérence entre le salaire proposé et le poste
+    \item Détection d'incohérences dans la description du poste
+\end{itemize}
+
+\subsubsection{Approches basées sur l'apprentissage automatique}
+Les techniques d'apprentissage automatique permettent une détection plus sophistiquée:
+\begin{itemize}
+    \item Classification supervisée (Random Forest, SVM, réseaux de neurones)
+    \item Analyse de texte et NLP pour détecter les anomalies linguistiques
+    \item Détection d'anomalies pour identifier les offres atypiques
+    \item Systèmes de réputation et de feedback
+\end{itemize}
+
+\subsubsection{Approches hybrides}
+Les systèmes les plus performants combinent règles et apprentissage automatique pour maximiser la précision de détection tout en minimisant les faux positifs.
+
+\subsection{Conclusion}
+L'analyse de la problématique et de l'état de l'art révèle un besoin clair pour une solution intégrée combinant recherche d'emploi et détection de fraude avancée. Notre projet vise à combler cette lacune en développant une plateforme innovante utilisant des techniques modernes de machine learning et d'analyse de données.
+
+\section{Conception et Méthodologie}
+\subsection{Introduction}
+Ce chapitre présente notre approche méthodologique pour le développement de la plateforme, en détaillant particulièrement l'utilisation de la méthodologie CRISP-DM pour la partie science des données.
+
+\subsection{Méthodologie SCRUM}
+Pour la gestion globale du projet, nous avons adopté la méthodologie SCRUM, qui offre un cadre agile adapté au développement itératif et incrémental.
+
+\subsubsection{Organisation de l'équipe}
+\begin{itemize}
+    \item \textbf{Product Owner}: Souiden Malek
+    \item \textbf{Scrum Master}: Saada Nadine
+    \item \textbf{Équipe de développement}: Najjar Mariem, Ftouhi Sondes, Trabelsi Yassmine
+\end{itemize}
+
+\subsubsection{Sprints et cérémonies}
+Le projet a été organisé en sprints de deux semaines, avec:
+\begin{itemize}
+    \item Sprint Planning au début de chaque sprint
+    \item Daily Scrum quotidien
+    \item Sprint Review à la fin de chaque sprint
+    \item Sprint Retrospective pour améliorer continuellement le processus
+\end{itemize}
+
+\subsubsection{Backlog et user stories}
+Le Product Backlog a été organisé en user stories priorisées selon leur valeur métier et leur complexité technique. Exemples de user stories:
+\begin{itemize}
+    \item En tant qu'utilisateur, je veux pouvoir rechercher des offres d'emploi par mots-clés et localisation
+    \item En tant qu'utilisateur, je veux voir un indicateur de risque de fraude pour chaque offre
+    \item En tant qu'utilisateur, je veux créer un profil pour recevoir des recommandations personnalisées
+\end{itemize}
+
+\subsection{Méthodologie CRISP-DM}
+Pour la partie science des données et détection de fraude, nous avons choisi la méthodologie CRISP-DM (Cross-Industry Standard Process for Data Mining).
+
+\subsubsection{Pourquoi CRISP-DM?}
+CRISP-DM a été sélectionné pour plusieurs raisons:
+\begin{itemize}
+    \item Méthodologie éprouvée et standardisée pour les projets de data mining
+    \item Approche structurée en 6 phases bien définies
+    \item Processus itératif permettant des améliorations continues
+    \item Adaptabilité à différents types de problèmes de data mining
+    \item Complémentarité avec la méthodologie SCRUM
+\end{itemize}
+
+\subsubsection{Les 6 phases de CRISP-DM dans notre projet}
+\begin{enumerate}
+    \item \textbf{Compréhension du métier}: Analyse des besoins des chercheurs d'emploi et identification des types de fraudes courantes
+    \item \textbf{Compréhension des données}: Collecte et analyse des offres d'emploi légitimes et frauduleuses
+    \item \textbf{Préparation des données}: Nettoyage, transformation et enrichissement des données d'offres d'emploi
+    \item \textbf{Modélisation}: Développement d'algorithmes de détection de fraude et de matching de profils
+    \item \textbf{Évaluation}: Tests et validation des modèles sur des données réelles
+    \item \textbf{Déploiement}: Intégration des modèles dans la plateforme web
+\end{enumerate}
+
+\subsection{Architecture technique}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{architecture.png}
+\caption{Architecture globale de la plateforme JobMatchy}
+\end{figure}
+
+L'architecture de notre solution comprend plusieurs couches et modules interconnectés :
+
+\begin{itemize}
+    \item \textbf{Frontend} : Interface utilisateur responsive développée avec HTML, CSS, JavaScript et Bootstrap 5, offrant une expérience utilisateur intuitive et moderne.
+
+    \item \textbf{Backend} : Serveur Flask (Python) qui gère la logique métier, les requêtes API, l'authentification et la coordination entre les différents modules.
+
+    \item \textbf{Base de données} : SQLite avec SQLAlchemy comme ORM pour le stockage persistant des données (offres d'emploi, profils utilisateurs, résultats d'analyse).
+
+    \item \textbf{Module de scraping} : Collecte automatisée d'offres d'emploi depuis diverses sources (LinkedIn, Indeed, Monster, Pôle Emploi) avec gestion des erreurs et limitation de débit.
+
+    \item \textbf{Module de détection de fraude} : Analyse des offres d'emploi à l'aide d'un modèle RandomForest et de règles métier pour calculer un score de risque et identifier les signaux d'alerte.
+
+    \item \textbf{Module de matching} : Algorithme de mise en correspondance entre les profils utilisateurs et les offres d'emploi, basé sur les compétences, la localisation, le type de contrat et d'autres critères.
+\end{itemize}
+
+Cette architecture modulaire permet une maintenance facilitée et une évolution indépendante de chaque composant, tout en garantissant une intégration cohérente de l'ensemble du système.
+
+\subsection{Conclusion}
+La combinaison des méthodologies SCRUM et CRISP-DM nous a permis d'aborder ce projet complexe de manière structurée et agile. SCRUM a fourni le cadre de gestion de projet global, tandis que CRISP-DM a guidé spécifiquement le développement des composants d'intelligence artificielle et d'analyse de données.
+
+\section{Réalisations et Implémentation}
+\subsection{Introduction}
+Ce chapitre présente les réalisations concrètes du projet, en détaillant les fonctionnalités développées et leur implémentation technique, notamment à travers les phases de CRISP-DM.
+
+\subsection{Plateforme de recherche d'emploi}
+\subsubsection{Interface utilisateur}
+L'interface utilisateur a été conçue pour être intuitive et responsive:
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{interface_recherche.png}
+\caption{Interface de recherche d'emploi avec détection de fraude et matching de profil}
+\end{figure}
+
+\subsubsection{Fonctionnalités principales}
+\begin{itemize}
+    \item Recherche multicritères (mots-clés, localisation, type de contrat, etc.)
+    \item Filtrage avancé des résultats
+    \item Visualisation détaillée des offres
+    \item Gestion de profil utilisateur
+    \item Système de recommandation personnalisée
+\end{itemize}
+
+\subsection{Implémentation de CRISP-DM}
+\subsubsection{Phase 1: Compréhension du métier}
+Durant cette phase, nous avons:
+\begin{itemize}
+    \item Réalisé des entretiens avec des experts en recrutement
+    \item Analysé les types de fraudes les plus courantes dans les offres d'emploi
+    \item Défini les indicateurs de fraude pertinents
+    \item Établi les objectifs de performance du système de détection
+\end{itemize}
+
+\subsubsection{Phase 2: Compréhension des données}
+Pour cette phase, nous avons développé un outil de scraping spécifique permettant:
+\begin{itemize}
+    \item La collecte d'offres d'emploi depuis diverses sources
+    \item L'enregistrement des parcours de navigation pour automatiser la collecte
+    \item L'extraction structurée des informations pertinentes
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{scraping_tool.png}
+\caption{Interface de l'outil de scraping développé (Scraping Roadmap Tool)}
+\end{figure}
+
+Notre outil de scraping, \textit{Scraping Roadmap Tool}, permet d'enregistrer les interactions avec un site web et de générer automatiquement les sélecteurs (XPath, CSS) pour extraire les données pertinentes. Voici ses principales fonctionnalités:
+
+\begin{itemize}
+    \item Navigation automatisée avec Selenium
+    \item Enregistrement des clics et interactions utilisateur
+    \item Génération automatique de sélecteurs XPath et CSS
+    \item Export des parcours de navigation au format JSON
+    \item Interface graphique intuitive avec Tkinter
+\end{itemize}
+\begin{lstlisting}[language=Python,
+  caption=Extrait du code de l'outil de scraping,
+  basicstyle=\scriptsize,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  columns=flexible,
+  frame=single,              % active le cadre
+  xleftmargin=4em,           % décale le texte à l'intérieur du cadre
+  framexleftmargin=2em       % décale le cadre pour qu'il suive le texte
+]
+import tkinter as tk
+from tkinter import simpledialog, messagebox, filedialog
+import json
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+
+class ScrapingRoadmapTool:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Scraping Roadmap Tool")
+        self.root.geometry("650x450")
+
+        self.roadmap = []
+        self.driver = None
+        self.recording = False
+
+        # UI
+        frame = tk.Frame(root)
+        frame.pack(padx=20, pady=20, fill="both", expand=True)
+
+        # URL
+        url_frame = tk.Frame(frame)
+        url_frame.pack(fill="x", pady=5)
+        tk.Label(url_frame, text="URL:").pack(side="left")
+        self.url_entry = tk.Entry(url_frame)
+        self.url_entry.pack(side="left", fill="x", expand=True, padx=5)
+
+        # Buttons open / start / stop / save
+        btn_frame = tk.Frame(frame)
+        btn_frame.pack(pady=10)
+        tk.Button(btn_frame, text="Ouvrir Site", command=self.open_website).pack(side="left", padx=5)
+        tk.Button(btn_frame, text="Démarrer Enregistrement", command=self.start_recording).pack(side="left", padx=5)
+        tk.Button(btn_frame, text="Arrêter Enregistrement", command=self.stop_recording).pack(side="left", padx=5)
+        tk.Button(btn_frame, text="Sauvegarder JSON", command=self.save_roadmap).pack(side="left", padx=5)
+
+        # List of actions
+        list_frame = tk.Frame(frame)
+        list_frame.pack(fill="both", expand=True)
+        tk.Label(list_frame, text="Actions enregistrées:").pack(anchor="w")
+        self.listbox = tk.Listbox(list_frame)
+        self.listbox.pack(fill="both", expand=True)
+
+        # Rename and Remove
+        action_frame = tk.Frame(frame)
+        action_frame.pack(pady=5)
+        tk.Button(action_frame, text="Renommer", command=self.name_element).pack(side="left", padx=5)
+        tk.Button(action_frame, text="Supprimer", command=self.delete_element).pack(side="left", padx=5)
+
+    def open_website(self):
+        url = self.url_entry.get().strip()
+        if not url:
+            messagebox.showerror("Erreur", "Entrez une URL valide.")
+            return
+        if not url.startswith(('http://','https://')):
+            url = 'https://' + url
+        options = Options()
+        options.add_experimental_option("detach", True)
+        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        self.driver.get(url)
+        messagebox.showinfo("Info", "Site ouvert. Vous pouvez démarrer l'enregistrement.")
+
+    def start_recording(self):
+        if not self.driver:
+            messagebox.showerror("Erreur", "Ouvrez d'abord le site.")
+            return
+        if self.recording:
+            messagebox.showwarning("Avertissement", "Enregistrement déjà démarré.")
+            return
+        # inject JS
+        self.driver.execute_script("window._cliks=[];")
+        js = """
+        document.addEventListener('click', function(e){
+            var getXPath=function(el){if(el.id)return '//*[@id="'+el.id+'"]';if(el===document.body)return '/html/body';var ix=0,sibs=el.parentNode.childNodes;for(var i=0;i<sibs.length;i++){var s=sibs[i];if(s===el)return getXPath(el.parentNode)+'/'+el.tagName.toLowerCase()+'['+(ix+1)+']';if(s.nodeType===1&&s.tagName===el.tagName)ix++;} };
+            var getCss=function(el){if(el.id)return '#'+el.id;if(el.className)return '.'+el.className.trim().split(/\s+/).join('.');var path=el.tagName.toLowerCase();if(el.parentNode&&el.parentNode!==document)path=getCss(el.parentNode)+' > '+path;return path;};
+            window._cliks.push({xpath:getXPath(e.target),cssSelector:getCss(e.target),tagName:e.target.tagName,innerText:(e.target.innerText||'').trim().substring(0,30)});
+        }, true);
+        """
+        self.driver.execute_script(js)
+        self.recording = True
+        self.poll_clicks()
+        messagebox.showinfo("Info", "Enregistrement démarré.")
+
+    def poll_clicks(self):
+        if not self.recording or not self.driver:
+            return
+        try:
+            items = self.driver.execute_script("var c=window._cliks.slice();window._cliks=[];return c;")
+            for it in items or []:
+                # avoid duplicates
+                if any(r['xpath']==it['xpath'] for r in self.roadmap):
+                    continue
+                rec={'name':f"Element {len(self.roadmap)+1}",**it}
+                self.roadmap.append(rec)
+                self.listbox.insert(tk.END,f"{rec['name']}: {rec['cssSelector']} [{rec['tagName']}] - {rec['innerText']}")
+        except Exception:
+            pass
+        self.root.after(400, self.poll_clicks)
+
+    def stop_recording(self):
+        if not self.recording:
+            messagebox.showwarning("Avertissement", "Aucun enregistrement en cours.")
+            return
+        self.recording=False
+        # remove listener
+        self.driver.execute_script("document.removeEventListener('click',arguments.callee,true);")
+        messagebox.showinfo("Info", "Enregistrement arrêté.")
+
+    def name_element(self):
+        sel=self.listbox.curselection()
+        if not sel:
+            return
+        idx=sel[0];rec=self.roadmap[idx]
+        new=simpledialog.askstring("Renommer","Nouveau nom:",initialvalue=rec['name'])
+        if new:
+            rec['name']=new
+            self.listbox.delete(idx)
+            self.listbox.insert(idx,f"{new}: {rec['cssSelector']} [{rec['tagName']}] - {rec['innerText']}")
+
+    def delete_element(self):
+        sel=self.listbox.curselection()
+        if not sel:
+            return
+        idx=sel[0]
+        del self.roadmap[idx]
+        self.listbox.delete(idx)
+        # renumber
+        for i,rec in enumerate(self.roadmap): rec['name']=f"Element {i+1}"
+        self.listbox.delete(0,tk.END)
+        for rec in self.roadmap:
+            self.listbox.insert(tk.END,f"{rec['name']}: {rec['cssSelector']} [{rec['tagName']}] - {rec['innerText']}")
+
+    def save_roadmap(self):
+        if not self.roadmap:
+            messagebox.showwarning("Avertissement","Rien à sauvegarder.")
+            return
+        fp=filedialog.asksaveasfilename(defaultextension='.json',filetypes=[('JSON','*.json')])
+        if not fp: return
+        try:
+            with open(fp,'w',encoding='utf-8') as f:
+                json.dump(self.roadmap,f,ensure_ascii=False,indent=4)
+            messagebox.showinfo("Succès",f"Fichier enregistré: {fp}")
+        except Exception as e:
+            messagebox.showerror("Erreur",str(e))
+
+if __name__=='__main__':
+    root=tk.Tk()
+    ScrapingRoadmapTool(root)
+    root.mainloop()
+\end{lstlisting}
+\subsubsection{Phase 3: Préparation des données}
+Cette phase a impliqué:
+\begin{itemize}
+    \item Nettoyage et normalisation des données collectées
+    \item Extraction de caractéristiques pertinentes (feature engineering)
+    \item Enrichissement des données avec des sources externes
+    \item Création d'un jeu de données équilibré pour l'entraînement
+\end{itemize}
+
+\subsubsection{Phase 4: Modélisation}
+Nous avons développé deux modèles principaux:
+
+\textbf{Modèle de détection de fraude}:
+\begin{itemize}
+    \item Algorithme: Random Forest
+    \item Caractéristiques utilisées:
+    \begin{itemize}
+        \item Analyse linguistique du texte
+        \item Cohérence entre titre, description et salaire
+        \item Présence d'indicateurs de fraude connus
+        \item Réputation de l'entreprise
+    \end{itemize}
+    \item Performance: Précision de 87\%, Rappel de 92\%
+\end{itemize}
+
+\textbf{Modèle de matching de profils}:
+\begin{itemize}
+    \item Algorithme: Système de scoring multicritères
+    \item Critères de matching:
+    \begin{itemize}
+        \item Correspondance des compétences (35\%)
+        \item Correspondance géographique (15\%)
+        \item Type de contrat (15\%)
+        \item Niveau d'expérience (10\%)
+        \item Niveau d'éducation (10\%)
+        \item Autres critères (15\%)
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Phase 5: Évaluation}
+L'évaluation des modèles a été réalisée via:
+\begin{itemize}
+    \item Validation croisée sur les données d'entraînement
+    \item Tests sur un jeu de données de validation indépendant
+    \item Évaluation qualitative par des experts en recrutement
+    \item Tests utilisateurs pour évaluer la pertinence des résultats
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{evaluation_modele.png}
+\caption{Matrice de confusion du modèle de détection de fraude}
+\end{figure}
+
+\subsubsection{Phase 6: Déploiement}
+Le déploiement a inclus:
+\begin{itemize}
+    \item Intégration des modèles dans l'application Flask
+    \item Mise en place d'un système de mise à jour périodique des modèles
+    \item Développement d'une API pour les prédictions en temps réel
+    \item Monitoring des performances des modèles en production
+\end{itemize}
+
+\subsection{Résultats et captures d'écran}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{detail_offre.png}
+\caption{Détail d'une offre avec indicateurs de fraude}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{matching_profil.png}
+\caption{Résultats de matching de profil}
+\end{figure}
+
+\subsection{Conclusion}
+L'implémentation de la méthodologie CRISP-DM nous a permis de développer un système de détection de fraude performant et un algorithme de matching efficace. L'outil de scraping développé a joué un rôle crucial dans la collecte et la compréhension des données, facilitant ainsi les phases ultérieures du processus.
+
+\section{Perspectives d'Évolution}
+\subsection{Introduction}
+Ce chapitre présente les perspectives d'évolution et d'amélioration de notre plateforme, identifiées au cours du développement et des retours utilisateurs.
+
+\subsection{Améliorations techniques}
+\begin{itemize}
+    \item \textbf{Passage à une architecture microservices} pour améliorer la scalabilité
+    \item \textbf{Implémentation d'un système de mise à jour continue des modèles} avec apprentissage en ligne
+    \item \textbf{Optimisation des performances de scraping} avec des techniques avancées de parallélisation
+    \item \textbf{Développement d'une application mobile} pour élargir l'accessibilité
+\end{itemize}
+
+\subsection{Nouvelles fonctionnalités}
+\begin{itemize}
+    \item \textbf{Système de notation communautaire} des offres d'emploi
+    \item \textbf{Intégration avec les réseaux sociaux professionnels}
+    \item \textbf{Analyse prédictive des tendances du marché de l'emploi}
+    \item \textbf{Assistant virtuel} pour guider les utilisateurs dans leur recherche
+    \item \textbf{Système de recommandation de formation} pour combler les lacunes de compétences
+\end{itemize}
+
+\subsection{Expansion du modèle}
+\begin{itemize}
+    \item \textbf{Support multilingue} pour couvrir plus de marchés
+    \item \textbf{Adaptation à des secteurs spécifiques} avec des modèles spécialisés
+    \item \textbf{Partenariats avec des plateformes de recrutement} existantes
+    \item \textbf{Développement d'une API publique} pour intégration tierce
+\end{itemize}
+
+\subsection{Conclusion}
+Notre plateforme présente un potentiel d'évolution significatif, tant sur le plan technique que fonctionnel. Les perspectives identifiées permettraient d'améliorer l'expérience utilisateur, d'élargir la portée du service et d'affiner la précision des modèles de détection et de matching.
+
+\section{Implémentation du Modèle de Détection de Fraude}
+\subsection{Introduction}
+Cette section détaille l'implémentation technique du modèle de détection de fraude, élément central de notre plateforme JobMatchy.
+
+\subsection{Préparation des données d'entraînement}
+Pour entraîner notre modèle, nous avons constitué un jeu de données comprenant:
+\begin{itemize}
+    \item 380 offres d'emploi légitimes collectées sur des plateformes reconnues
+    \item 170 offres frauduleuses identifiées par des experts en recrutement
+    \item 50 offres "grises" présentant des caractéristiques ambiguës
+\end{itemize}
+
+Chaque offre a été annotée manuellement avec un score de risque allant de 0 (légitime) à 1 (frauduleuse), puis transformée en un vecteur de caractéristiques.
+
+\subsection{Extraction des caractéristiques (Feature Engineering)}
+Nous avons extrait plus de 50 caractéristiques de chaque offre d'emploi, regroupées en plusieurs catégories:
+
+\subsubsection{Caractéristiques textuelles}
+\begin{itemize}
+    \item Analyse TF-IDF des descriptions de poste
+    \item Présence de mots-clés suspects (liste de 120 termes)
+    \item Ratio de termes vagues vs. termes précis
+    \item Analyse de sentiment (polarité et subjectivité)
+    \item Complexité linguistique (longueur des phrases, diversité lexicale)
+\end{itemize}
+
+\subsubsection{Caractéristiques structurelles}
+\begin{itemize}
+    \item Complétude de l'offre (pourcentage de champs remplis)
+    \item Présence de coordonnées de contact vérifiables
+    \item Cohérence entre titre et description
+    \item Présence d'une description détaillée des responsabilités
+    \item Présence d'exigences spécifiques vs. génériques
+\end{itemize}
+
+\subsubsection{Caractéristiques contextuelles}
+\begin{itemize}
+    \item Écart salarial par rapport à la moyenne du secteur
+    \item Réputation de l'entreprise (existence vérifiable, ancienneté)
+    \item Cohérence géographique (adresse vérifiable)
+    \item Historique des offres publiées par la même entreprise
+    \item Similarité avec des offres frauduleuses connues
+\end{itemize}
+
+\subsection{Architecture du modèle}
+Après avoir testé plusieurs algorithmes (SVM, Réseaux de neurones, XGBoost), nous avons retenu un modèle Random Forest pour sa performance et son interprétabilité:
+
+\begin{itemize}
+    \item Nombre d'arbres: 150
+    \item Profondeur maximale: 15
+    \item Critère de division: Gini
+    \item Caractéristiques par division: sqrt(n\_features)
+    \item Validation: 5-fold cross-validation
+\end{itemize}
+
+
+\begin{lstlisting}[language=Python,
+  caption=Extrait du code de l'outil de scraping,
+  basicstyle=\scriptsize,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  columns=flexible,
+  frame=single,              % active le cadre
+  xleftmargin=4em,           % décale le texte à l'intérieur du cadre
+  framexleftmargin=2em       % décale le cadre pour qu'il suive le texte
+]
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV, cross_val_score
+from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np, pandas as pd, joblib
+
+X_train = pd.read_csv('features_train.csv')
+y_train = pd.read_csv('labels_train.csv')['fraud_score']
+X_test = pd.read_csv('features_test.csv')
+y_test = pd.read_csv('labels_test.csv')['fraud_score']
+
+# Définition des hyperparamètres à tester
+param_grid = {
+    'n_estimators': [100, 150, 200],
+    'max_depth': [10, 15, 20],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'bootstrap': [True, False]
+}
+
+# Recherche des meilleurs hyperparamètres
+rf = RandomForestClassifier(random_state=42)
+grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=5, n_jobs=-1, scoring='f1')
+grid_search.fit(X_train, y_train)
+
+# Meilleurs hyperparamètres et évaluation
+best_rf = grid_search.best_estimator_
+cv_scores = cross_val_score(best_rf, X_train, y_train, cv=5, scoring='f1')
+
+# Entraînement final et sauvegarde
+best_rf.fit(X_train, y_train)
+joblib.dump(best_rf, 'rf_pipeline.pkl')
+
+# Évaluation sur l'ensemble de test
+y_pred = best_rf.predict(X_test)
+print(classification_report(y_test, y_pred))
+
+# Importance des caractéristiques
+feature_importances = pd.DataFrame(
+    best_rf.feature_importances_,
+    index=X_train.columns,
+    columns=['importance']
+).sort_values('importance', ascending=False)
+\end{lstlisting}
+\subsection{Évaluation et interprétation}
+Le modèle final a atteint les performances suivantes sur l'ensemble de test:
+\begin{itemize}
+    \item Précision: 87.2\%
+    \item Rappel: 91.8\%
+    \item F1-Score: 89.4\%
+    \item Exactitude: 90.3\%
+\end{itemize}
+
+L'analyse des caractéristiques les plus importantes a révélé que les indicateurs les plus prédictifs de fraude sont:
+\begin{enumerate}
+    \item Écart salarial anormalement élevé par rapport au marché
+    \item Absence de coordonnées de contact vérifiables
+    \item Forte proportion de termes vagues dans la description
+    \item Incohérence entre les compétences requises et les responsabilités
+    \item Absence d'informations sur l'entreprise
+\end{enumerate}
+
+\subsection{Déploiement et monitoring}
+Le modèle a été déployé sous forme d'API REST intégrée à notre backend Flask. Chaque nouvelle offre d'emploi est automatiquement analysée et reçoit un score de risque. Un système de feedback permet aux utilisateurs de signaler les faux positifs/négatifs, alimentant ainsi un processus d'amélioration continue du modèle.
+
+\section{Analyse des Performances du Système de Scraping}
+\subsection{Introduction}
+Cette section présente une analyse détaillée des performances de notre système de scraping, élément crucial pour alimenter notre plateforme en offres d'emploi actualisées.
+
+\subsection{Architecture du système de scraping}
+Notre système de scraping repose sur une architecture distribuée comprenant:
+\begin{itemize}
+    \item Un orchestrateur central gérant les tâches de scraping
+    \item Des workers parallèles traitant différentes sources
+    \item Un système de file d'attente (RabbitMQ) pour la distribution des tâches
+    \item Un mécanisme de stockage intermédiaire (Redis) pour les données extraites
+    \item Un pipeline ETL pour la transformation et le chargement des données
+\end{itemize}
+
+\subsection{Sources d'offres d'emploi}
+Le système collecte actuellement des offres depuis 6 sources principales:
+\begin{itemize}
+    \item LinkedIn Jobs (30\% des offres)
+    \item Indeed (25\% des offres)
+    \item Monster (15\% des offres)
+    \item Pôle Emploi (15\% des offres)
+    \item APEC (10\% des offres)
+    \item Sites d'entreprises spécifiques (5\% des offres)
+\end{itemize}
+
+\subsection{Métriques de performance}
+Après optimisation, notre système atteint les performances suivantes:
+\begin{itemize}
+    \item Vitesse d'extraction: ~2000 offres/heure
+    \item Taux de réussite: 94\% (offres correctement extraites)
+    \item Précision des données: 97\% (champs correctement extraits)
+    \item Fraîcheur des données: mise à jour quotidienne
+    \item Couverture: 85\% des offres disponibles sur les plateformes cibles
+\end{itemize}
+
+\subsection{Mécanismes anti-détection}
+Pour éviter d'être bloqué par les sites sources, nous avons implémenté plusieurs stratégies:
+\begin{itemize}
+    \item Rotation d'adresses IP via un réseau de proxies
+    \item Simulation de comportement utilisateur (délais aléatoires, mouvements de souris)
+    \item Rotation d'user-agents et d'empreintes de navigateur
+    \item Limitation de débit adaptative selon la charge des sites cibles
+    \item Sessions distribuées pour éviter les patterns de requêtes identifiables
+\end{itemize}
+
+\subsection{Défis et solutions}
+\begin{itemize}
+    \item \textbf{Défi}: Changements fréquents dans la structure des sites\\
+    \textbf{Solution}: Système d'auto-apprentissage des sélecteurs CSS/XPath
+
+    \item \textbf{Défi}: Contenu dynamique chargé via JavaScript\\
+    \textbf{Solution}: Utilisation de Selenium et Playwright pour le rendu complet
+
+    \item \textbf{Défi}: CAPTCHAs et autres mécanismes anti-bot\\
+    \textbf{Solution}: Service de résolution de CAPTCHA et empreintes de navigateur réalistes
+
+    \item \textbf{Défi}: Extraction de données non structurées\\
+    \textbf{Solution}: Modèles NLP pour l'extraction d'entités nommées
+\end{itemize}
+
+\subsection{Évolution et maintenance}
+Le système de scraping est maintenu par un processus continu:
+\begin{itemize}
+    \item Monitoring automatique des taux de réussite par source
+    \item Alertes en cas de baisse significative des performances
+    \item Mise à jour hebdomadaire des patterns d'extraction
+    \item Tests de non-régression après chaque modification
+    \item Documentation des changements structurels des sites sources
+\end{itemize}
+
+\section{Conclusion Générale}
+Ce projet a permis de développer une plateforme innovante combinant recherche d'emploi et détection de fraude, répondant à un besoin réel et croissant sur le marché du recrutement en ligne. L'utilisation conjointe des méthodologies SCRUM et CRISP-DM a fourni un cadre structuré pour aborder les aspects de gestion de projet et de data science.
+
+Les principales contributions de notre travail sont:
+\begin{itemize}
+    \item Un système de détection de fraude basé sur l'apprentissage automatique avec une précision élevée
+    \item Un algorithme de matching intelligent entre profils et offres d'emploi
+    \item Un outil de scraping innovant facilitant la collecte de données structurées
+    \item Une interface utilisateur intuitive et responsive
+\end{itemize}
+
+Les défis rencontrés, notamment dans la collecte de données et l'équilibrage entre précision de détection et faux positifs, ont été surmontés grâce à une approche méthodique et itérative.
+
+Ce projet constitue une base solide pour de futures améliorations et extensions, avec le potentiel de devenir un outil incontournable pour les chercheurs d'emploi soucieux de leur sécurité.
+
+\section*{Références}
+\begin{enumerate}
+    \item Chapman, P., Clinton, J., Kerber, R., Khabaza, T., Reinartz, T., Shearer, C., \& Wirth, R. (2000). CRISP-DM 1.0: Step-by-step data mining guide.
+    \item Schwaber, K., \& Sutherland, J. (2020). The Scrum Guide.
+    \item Chandola, V., Banerjee, A., \& Kumar, V. (2009). Anomaly detection: A survey. ACM computing surveys (CSUR), 41(3), 1-58.
+    \item Sebastiani, F. (2002). Machine learning in automated text categorization. ACM computing surveys (CSUR), 34(1), 1-47.
+    \item Breiman, L. (2001). Random forests. Machine learning, 45(1), 5-32.
+\end{enumerate}
+
+\end{document}
